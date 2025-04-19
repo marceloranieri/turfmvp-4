@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
-import { useTurf, Message, MessageTag, ReactionType } from '@/contexts/TurfContext';
+import { useTurf } from '@/contexts/TurfContext';
+import { Message, MessageTag, ReactionType } from '@/types/turf';
 import { format } from 'date-fns';
 import { ThumbsUp, ThumbsDown, Link as LinkIcon, MessageSquare, Smile, BrainCircuit, Image } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
