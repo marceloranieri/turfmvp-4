@@ -2,8 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from "date-fns";
-import { Calendar } from "@/components/ui/calendar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -14,12 +13,12 @@ interface DebateTopic {
   id: number;
   theme: string;
   topic_text: string;
-  debate_date: string;
+  scheduled_for: string;
 }
 
 const DebateCalendar = () => {
   const navigate = useNavigate();
-  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(new Date());
+  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date('2025-10-01'));
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const { data: debateTopics, isLoading } = useQuery({
@@ -28,7 +27,7 @@ const DebateCalendar = () => {
       const { data, error } = await supabase
         .from('debate_topics')
         .select('*')
-        .order('debate_date', { ascending: true });
+        .order('scheduled_for', { ascending: true });
       
       if (error) throw error;
       return data as DebateTopic[];
@@ -36,28 +35,27 @@ const DebateCalendar = () => {
   });
 
   const selectedDateTopic = debateTopics?.find(
-    topic => selectedDate && format(new Date(topic.debate_date), 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
+    topic => format(new Date(topic.scheduled_for), 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
   );
 
-  const hasDebate = (date: Date) => {
-    return debateTopics?.some(
-      topic => format(new Date(topic.debate_date), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
-    );
-  };
-
-  const handleDateSelect = (date: Date | undefined) => {
-    setSelectedDate(date);
-    if (date && debateTopics?.some(topic => 
-      format(new Date(topic.debate_date), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
-    )) {
-      setIsModalOpen(true);
+  const handleDateSelect = (direction: 'prev' | 'next') => {
+    const currentDate = selectedDate;
+    const newDate = new Date(currentDate);
+    
+    if (direction === 'next') {
+      newDate.setDate(currentDate.getDate() + 1);
+    } else {
+      newDate.setDate(currentDate.getDate() - 1);
     }
+
+    setSelectedDate(newDate);
+    setIsModalOpen(true);
   };
 
   return (
     <div className="flex min-h-screen bg-background p-8">
       <Card className="w-full max-w-4xl mx-auto">
-        <CardHeader>
+        <div className="p-6 border-b">
           <div className="flex items-center space-x-4">
             <Button 
               variant="ghost" 
@@ -67,25 +65,36 @@ const DebateCalendar = () => {
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <CardTitle>Debate Calendar</CardTitle>
+            <h1 className="text-2xl font-semibold">Debate Calendar</h1>
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex justify-center">
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={handleDateSelect}
-              className="rounded-md border"
-              modifiers={{ hasDebate }}
-              modifiersStyles={{
-                hasDebate: {
-                  fontWeight: 'bold',
-                  backgroundColor: 'hsl(var(--primary) / 0.1)',
-                  color: 'hsl(var(--primary))'
-                }
-              }}
-            />
+        </div>
+        
+        <CardContent className="p-6">
+          <div className="flex items-center justify-center space-x-6">
+            <Button
+              variant="outline"
+              onClick={() => handleDateSelect('prev')}
+              disabled={format(selectedDate, 'yyyy-MM-dd') <= '2025-10-01'}
+            >
+              Previous
+            </Button>
+            
+            <div className="text-center">
+              <div className="text-sm text-muted-foreground">
+                {format(selectedDate, 'MMM')}
+              </div>
+              <div className="text-4xl font-bold">
+                {format(selectedDate, 'd')}
+              </div>
+            </div>
+
+            <Button
+              variant="outline"
+              onClick={() => handleDateSelect('next')}
+              disabled={format(selectedDate, 'yyyy-MM-dd') >= '2025-10-24'}
+            >
+              Next
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -93,7 +102,7 @@ const DebateCalendar = () => {
       <TopicModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        topic={selectedDateTopic}
+        topic={selectedDateTopic || null}
       />
     </div>
   );
