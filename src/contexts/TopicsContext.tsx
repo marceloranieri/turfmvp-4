@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState } from 'react';
 import { DebateTopic } from '@/types/turf';
-import { INITIAL_TOPIC_FIXED } from '@/constants/turf';
+import { INITIAL_TOPIC } from '@/constants/turf';
 
 interface TopicsContextType {
   currentTopic: DebateTopic | null;
@@ -10,7 +10,7 @@ interface TopicsContextType {
 const TopicsContext = createContext<TopicsContextType | null>(null);
 
 export const TopicsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentTopic] = useState<DebateTopic>(INITIAL_TOPIC_FIXED);
+  const [currentTopic] = useState<DebateTopic>(INITIAL_TOPIC);
 
   return (
     <TopicsContext.Provider value={{ currentTopic }}>
