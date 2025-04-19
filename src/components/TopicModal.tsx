@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { format } from "date-fns";
 import { Share2, CalendarPlus, ArrowLeft, ArrowRight } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -23,8 +23,6 @@ interface TopicModalProps {
 }
 
 const TopicModal = ({ isOpen, onClose, topic, onDateChange }: TopicModalProps) => {
-  if (!topic) return null;
-
   const { data: allTopics } = useQuery({
     queryKey: ['debateTopics'],
     queryFn: async () => {
@@ -38,17 +36,15 @@ const TopicModal = ({ isOpen, onClose, topic, onDateChange }: TopicModalProps) =
     }
   });
 
-  const currentIndex = allTopics?.findIndex(t => t.id === topic.id) ?? -1;
+  const currentIndex = allTopics?.findIndex(t => t.id === topic?.id) ?? -1;
   const prevTopic = currentIndex > 0 ? allTopics?.[currentIndex - 1] : null;
   const nextTopic = currentIndex < (allTopics?.length ?? 0) - 1 ? allTopics?.[currentIndex + 1] : null;
 
   const findNextScheduledTopic = () => {
     if (!allTopics || allTopics.length === 0) return null;
     const today = new Date().toISOString().split('T')[0];
-    return allTopics.find(t => t.debate_date > today);
+    return allTopics.find(t => t.debate_date >= today);
   };
-
-  const nextScheduledTopic = findNextScheduledTopic();
 
   const handlePrevDate = () => {
     if (prevTopic && onDateChange) {
@@ -61,6 +57,8 @@ const TopicModal = ({ isOpen, onClose, topic, onDateChange }: TopicModalProps) =
       onDateChange(new Date(nextTopic.debate_date));
     }
   };
+
+  const nextScheduledTopic = findNextScheduledTopic();
 
   const handleNextScheduled = () => {
     if (nextScheduledTopic && onDateChange) {
@@ -77,18 +75,6 @@ const TopicModal = ({ isOpen, onClose, topic, onDateChange }: TopicModalProps) =
     // In a real app, this would open a share dialog
     console.log('Sharing topic:', topic);
   };
-
-  // Create hashtags from the theme
-  const hashtags = topic.theme.toLowerCase().split(' & ').map(tag => tag.replace(/\s+/g, ''));
-
-  // Mock participants - in a real app, this would come from the database
-  const mockParticipants = [
-    { id: 1, name: 'AB' },
-    { id: 2, name: 'CD' },
-    { id: 3, name: 'EF' },
-    { id: 4, name: 'GH' },
-    { id: 5, name: 'IJ' },
-  ];
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -114,10 +100,10 @@ const TopicModal = ({ isOpen, onClose, topic, onDateChange }: TopicModalProps) =
             
             <div className="flex items-baseline space-x-2">
               <span className="text-sm text-muted-foreground">
-                {format(new Date(topic.debate_date), 'MMM')}
+                {format(new Date(topic?.debate_date || new Date()), 'MMM')}
               </span>
               <span className="text-4xl font-bold">
-                {format(new Date(topic.debate_date), 'd')}
+                {format(new Date(topic?.debate_date || new Date()), 'd')}
               </span>
             </div>
 
@@ -132,14 +118,14 @@ const TopicModal = ({ isOpen, onClose, topic, onDateChange }: TopicModalProps) =
             </Button>
           </div>
           
-          {/* No Topic Message */}
+          {/* No Topic Message with Next Scheduled Link */}
           {!topic && nextScheduledTopic && (
             <div className="text-center p-4">
-              <p className="text-muted-foreground mb-2">No topic scheduled for this date.</p>
+              <p className="text-muted-foreground mb-4">No topic scheduled for this date.</p>
               <Button
                 variant="link"
                 onClick={handleNextScheduled}
-                className="text-primary"
+                className="text-primary font-medium"
               >
                 Next topic on {format(new Date(nextScheduledTopic.debate_date), 'MMMM d')} →
               </Button>
@@ -152,33 +138,15 @@ const TopicModal = ({ isOpen, onClose, topic, onDateChange }: TopicModalProps) =
               <div>
                 <h2 className="text-xl font-semibold mb-4">{topic.topic_text}</h2>
                 <div className="flex flex-wrap gap-2">
-                  {hashtags.map((tag) => (
+                  {topic.theme.toLowerCase().split(' & ').map((tag) => (
                     <Badge key={tag} variant="secondary" className="text-xs">
-                      #{tag}
+                      #{tag.replace(/\s+/g, '')}
                     </Badge>
                   ))}
                 </div>
               </div>
 
               <Separator />
-
-              {/* Participants Section */}
-              <div>
-                <div className="flex -space-x-2 mb-4">
-                  {mockParticipants.map((participant) => (
-                    <Avatar key={participant.id} className="border-2 border-background">
-                      <AvatarFallback className="bg-primary text-primary-foreground">
-                        {participant.name}
-                      </AvatarFallback>
-                    </Avatar>
-                  ))}
-                  <Avatar className="border-2 border-background">
-                    <AvatarFallback className="bg-primary/20">
-                      +99
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-              </div>
 
               {/* Action Buttons */}
               <div className="flex gap-3">
@@ -207,3 +175,4 @@ const TopicModal = ({ isOpen, onClose, topic, onDateChange }: TopicModalProps) =
 };
 
 export default TopicModal;
+
