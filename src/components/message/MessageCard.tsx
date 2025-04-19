@@ -1,13 +1,13 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { useTurf } from '@/contexts/TurfContext';
-import { Message, MessageTag, ReactionType } from '@/types/turf';
+import { Message, MessageTag } from '@/types/turf';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BrainCircuit, LinkIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MessageReactions from './MessageReactions';
 import MessageActions from './MessageActions';
 import MessageReplyForm from './MessageReplyForm';
+import { useMessageActions } from '@/hooks/useMessageActions';
 
 interface MessageCardProps {
   message: Message;
@@ -15,18 +15,21 @@ interface MessageCardProps {
 }
 
 const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) => {
-  const { 
-    currentUser, 
-    upvoteMessage, 
-    downvoteMessage, 
-    awardBrain, 
-    messages,
-    addReaction,
-    sendMessage
-  } = useTurf();
-  
-  const [showActions, setShowActions] = useState(false);
-  const [isReplying, setIsReplying] = useState(false);
+  const { messages } = useTurf();
+  const {
+    showActions,
+    setShowActions,
+    isReplying,
+    setIsReplying,
+    canAwardBrain,
+    brainAwardsLeft,
+    handleUpvote,
+    handleDownvote,
+    handleReplySubmit,
+    handleBrainAward,
+    handleReaction,
+    toggleReply
+  } = useMessageActions(message);
   
   const parentMessage = message.parentId 
     ? messages.find(m => m.id === message.parentId) 
@@ -41,9 +44,6 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) 
     minute: '2-digit'
   });
   
-  const isFromCurrentUser = currentUser?.id === message.userId;
-  const canAwardBrain = !isFromCurrentUser && (currentUser?.brainAwardsGiven || 0) < 3;
-  
   // Function to get tag color
   const getTagColor = (tag: MessageTag): string => {
     switch (tag) {
@@ -53,11 +53,6 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) 
       case 'Strong Evidence': return 'bg-green-400 text-white';
       default: return 'bg-gray-400 text-white';
     }
-  };
-
-  const handleReplySubmit = (content: string) => {
-    sendMessage(content, message.id);
-    setIsReplying(false);
   };
 
   return (
@@ -145,14 +140,14 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) 
           <MessageActions
             upvotes={message.upvotes}
             downvotes={message.downvotes}
-            onUpvote={() => upvoteMessage(message.id)}
-            onDownvote={() => downvoteMessage(message.id)}
-            onReplyClick={() => setIsReplying(!isReplying)}
-            onEmojiSelect={(emoji: string) => addReaction(message.id, 'emoji', emoji)}
-            onGifSelect={(gifUrl: string) => addReaction(message.id, 'gif', gifUrl)}
-            onBrainAward={() => awardBrain(message.id)}
+            onUpvote={handleUpvote}
+            onDownvote={handleDownvote}
+            onReplyClick={toggleReply}
+            onEmojiSelect={(emoji: string) => handleReaction('emoji', emoji)}
+            onGifSelect={(gifUrl: string) => handleReaction('gif', gifUrl)}
+            onBrainAward={handleBrainAward}
             canAwardBrain={canAwardBrain}
-            brainAwardsLeft={3 - (currentUser?.brainAwardsGiven || 0)}
+            brainAwardsLeft={brainAwardsLeft}
             showActions={showActions}
           />
           
