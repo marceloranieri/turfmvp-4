@@ -13,23 +13,21 @@ export const useSubscription = (
   const channelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
+    // Create a channel with the specified name
     const channel = supabase.channel(channelName);
     
-    // For Supabase realtime, we need to properly type the channel operations
-    // The correct syntax is to use the channel.on method with the proper configuration
-    channel
-      .on(
-        'postgres_changes',
-        {
-          event: event,
-          schema: 'public',
-          table: table,
-          ...(filter || {})
-        },
-        handler
-      )
-      .subscribe();
+    // Configure channel to listen for Postgres changes with the correct method signature
+    const subscription = channel.on('postgres_changes', {
+      event: event,
+      schema: 'public',
+      table: table,
+      ...(filter || {})
+    }, handler);
+
+    // Subscribe to the channel
+    subscription.subscribe();
     
+    // Store the channel reference for cleanup
     channelRef.current = channel;
 
     return () => {
