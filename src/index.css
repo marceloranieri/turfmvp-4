@@ -39,32 +39,35 @@
 
   .dark {
     /* Dark mode colors - matching the screenshot UI */
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
-    --ai: 199 69.5% 25%;
+    --background: 222 47% 11%;
+    --foreground: 0 0% 100%;
+    --card: 225 47% 8%;
+    --card-foreground: 0 0% 100%;
+    --popover: 225 47% 8%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 221 70% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 225 24% 20%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 225 24% 20%;
+    --muted-foreground: 210 20% 80%;
+    --accent: 221 70% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 63% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 225 24% 24%;
+    --input: 225 24% 20%;
+    --ring: 221 70% 55%;
+    --radius: 0.5rem;
+    --ai: 221 70% 55%;
     --ai-foreground: 0 0% 100%;
-    --sidebar: 215 27.9% 16.9%;
-    --sidebar-border: 217.2 32.6% 17.5%;
-    --sidebar-foreground: 210 40% 98%;
+    --sidebar: 225 32% 13%;
+    --sidebar-border: 225 24% 21%;
+    --sidebar-foreground: 0 0% 100%;
     --gold: 43 74% 49%;
     --gold-light: 43 74% 30%;
+    --message-ai-bg: 225 32% 17%;
+    --message-bg: 225 32% 13%;
   }
 
   * {
@@ -79,16 +82,16 @@
 @layer utilities {
   /* Message styling utilities */
   .message-sent {
-    @apply bg-[#E5E6EA] text-[#2C2F33];
+    @apply bg-[#E5E6EA] text-[#2C2F33] dark:bg-[#2B2D31] dark:text-white;
   }
   
   .message-received {
-    @apply bg-white text-[#2C2F33];
+    @apply bg-white text-[#2C2F33] dark:bg-[#2B2D31] dark:text-white;
   }
   
   /* Interactive elements */
   .button-primary {
-    @apply bg-[#00A8FC] text-white hover:bg-[#0084C3] transition-colors;
+    @apply bg-[#00A8FC] text-white hover:bg-[#0084C3] transition-colors dark:bg-[#5865F2] dark:hover:bg-[#4752C4];
   }
   
   /* Badge styling */
@@ -101,16 +104,17 @@
   }
   
   .badge-info {
-    @apply bg-[#E3F2FD] text-[#2C2F33];
+    @apply bg-[#E3F2FD] text-[#2C2F33] dark:bg-[#5865F2] dark:text-white;
   }
 
   /* Timestamp and secondary text */
   .text-secondary {
-    @apply text-[#99AAB5];
+    @apply text-[#99AAB5] dark:text-[#989AA2];
   }
   
   /* Input field styling */
   .input-field {
-    @apply bg-[#F6F6F6] border-[#DCDDDF] placeholder-[#72767D];
+    @apply bg-[#F6F6F6] border-[#DCDDDF] placeholder-[#72767D] 
+           dark:bg-[#383A40] dark:border-[#2D2F33] dark:placeholder-[#989AA2];
   }
 }
