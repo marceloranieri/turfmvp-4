@@ -1,9 +1,11 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
+    /* Light mode colors - will be used when dark mode is off */
     --background: 0 0% 100%;
     --foreground: 220 14% 12%;
     --card: 0 0% 100%;
@@ -34,6 +36,7 @@
   }
 
   .dark {
+    /* Dark mode colors - matching the screenshot UI */
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;

@@ -22,7 +22,7 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <TurfProvider>
-            <div className="min-h-screen dark">
+            <div className="min-h-screen">
               <Toaster />
               <Sonner />
               <BrowserRouter>
