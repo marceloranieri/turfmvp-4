@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Chatroom from "./pages/Chatroom";
 import NotFound from "./pages/NotFound";
-import HomeTurf from "./pages/HomeTurf";
+import HomeTurf from "./pages/HomeTurf/index";
 import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
