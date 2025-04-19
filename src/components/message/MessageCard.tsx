@@ -148,8 +148,8 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) 
             onUpvote={() => upvoteMessage(message.id)}
             onDownvote={() => downvoteMessage(message.id)}
             onReplyClick={() => setIsReplying(!isReplying)}
-            onEmojiSelect={(emoji) => addReaction(message.id, 'emoji', emoji)}
-            onGifSelect={(gifUrl) => addReaction(message.id, 'gif', gifUrl)}
+            onEmojiSelect={(emoji: string) => addReaction(message.id, 'emoji', emoji)}
+            onGifSelect={(gifUrl: string) => addReaction(message.id, 'gif', gifUrl)}
             onBrainAward={() => awardBrain(message.id)}
             canAwardBrain={canAwardBrain}
             brainAwardsLeft={3 - (currentUser?.brainAwardsGiven || 0)}
