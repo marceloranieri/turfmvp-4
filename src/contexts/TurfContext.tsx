@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { format } from 'date-fns';
 
@@ -229,44 +228,64 @@ export const TurfProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [currentTopic, setCurrentTopic] = useState<DebateTopic | null>(INITIAL_TOPIC);
   const [pinnedMessageId, setPinnedMessageId] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>(true);
+  const [lastPinTime, setLastPinTime] = useState<number>(0);
 
   // Calculate unread notifications count
   const unreadNotificationsCount = notifications.filter(n => !n.isRead).length;
 
-  // Effect for pinning messages every 5 minutes (just for demo purposes, pins for 30 seconds)
+  // Effect for pinning messages every 5 minutes
   useEffect(() => {
     const pinMessage = () => {
-      // Find message with most engagement (upvotes + reactions count)
+      const now = Date.now();
+      
+      // Only run pinning logic if it's been at least 5 minutes since the last pin
+      if (now - lastPinTime < 5 * 60 * 1000) {
+        return;
+      }
+      
+      // Find message with most engagement from the last 20 minutes (excluding AI messages)
       const lastMessages = messages
-        .filter(msg => !msg.isAi && new Date(msg.createdAt).getTime() > Date.now() - 20 * 60 * 1000) // Last 20 minutes
+        .filter(msg => 
+          !msg.isAi && 
+          new Date(msg.createdAt).getTime() > now - 20 * 60 * 1000
+        )
         .sort((a, b) => {
-          const engagementA = a.upvotes + a.reactions.length;
-          const engagementB = b.upvotes + b.reactions.length;
+          // Calculate engagement score: upvotes + reactions.length + number of replies
+          const repliesA = messages.filter(m => m.parentId === a.id).length;
+          const repliesB = messages.filter(m => m.parentId === b.id).length;
+          
+          const engagementA = a.upvotes + a.reactions.length + repliesA;
+          const engagementB = b.upvotes + b.reactions.length + repliesB;
+          
           return engagementB - engagementA;
         });
       
       if (lastMessages.length > 0) {
         const topMessage = lastMessages[0];
         setPinnedMessageId(topMessage.id);
+        setLastPinTime(now);
         
-        // Unpin after 30 seconds
+        // Unpin after exactly 30 seconds
         setTimeout(() => {
           setPinnedMessageId(null);
-        }, 30000);
+        }, 30 * 1000);
       }
     };
 
-    // Pin initially after a few seconds (for demo)
-    const initialPin = setTimeout(pinMessage, 5000);
+    // Initial pin after 5 seconds (for demo)
+    const initialPin = setTimeout(() => {
+      pinMessage();
+    }, 5000);
     
-    // Setup interval for every 5 minutes
-    const interval = setInterval(pinMessage, 5 * 60 * 1000);
+    // Setup interval for checking every minute
+    // (we'll check if 5 minutes have passed inside the function)
+    const interval = setInterval(pinMessage, 60 * 1000);
     
     return () => {
       clearTimeout(initialPin);
       clearInterval(interval);
     };
-  }, [messages]);
+  }, [messages, lastPinTime]);
 
   // Effect to simulate AI (Wizard of Mods) posting during lulls
   useEffect(() => {
