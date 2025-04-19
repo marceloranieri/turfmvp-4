@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTurf } from '@/contexts/TurfContext';
 import { Home, Bell, Search, Settings, Calendar } from 'lucide-react';
@@ -83,7 +82,6 @@ const CompactSidebarNav: React.FC = () => {
       </div>
       
       <div className="mt-auto relative flex flex-col items-center">
-        {/* Calendar icon button */}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -101,7 +99,6 @@ const CompactSidebarNav: React.FC = () => {
           </Tooltip>
         </TooltipProvider>
 
-        {/* Settings icon button */}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -119,7 +116,6 @@ const CompactSidebarNav: React.FC = () => {
           </Tooltip>
         </TooltipProvider>
 
-        {/* User avatar with Settings button */}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
