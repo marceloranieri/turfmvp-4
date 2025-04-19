@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { TurfContextType, User, HarmonyPointReason, HarmonyPointEvent } from '@/types/turf';
 import { MOCK_CURRENT_USER } from '../constants/turf';
 import { MessagesProvider } from './MessagesContext';
-import { NotificationsProvider } from './NotificationsContext';
+import { NotificationsProvider } from './NotificationsProvider';
 import { TopicsProvider } from './TopicsContext';
 
 const TurfContext = createContext<Partial<TurfContextType>>({});
@@ -20,7 +20,6 @@ export const TurfProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const calculateUserHarmonyPoints = (userId: string) => {
-    // Complex point calculation logic
     const userEvents = currentUser.harmonyPointEvents;
     
     const totalPoints = userEvents.reduce((total, event) => {
@@ -63,19 +62,6 @@ export const TurfProvider: React.FC<{ children: React.ReactNode }> = ({ children
     currentUser,
     darkMode,
     toggleDarkMode,
-    // These methods need to be defined in TurfContextType
-    updateHarmonyPoints: (points: number) => {
-      setCurrentUser(prev => ({
-        ...prev,
-        harmonyPoints: prev.harmonyPoints + points
-      }));
-    },
-    updateBrainAwards: () => {
-      setCurrentUser(prev => ({
-        ...prev,
-        brainAwardsReceived: prev.brainAwardsReceived + 1
-      }));
-    },
     awardHarmonyPoints,
     calculateUserHarmonyPoints
   };
