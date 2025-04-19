@@ -30,7 +30,14 @@ const DebateCalendar = () => {
         .order('scheduled_for', { ascending: true });
       
       if (error) throw error;
-      return data as DebateTopic[];
+      
+      // Map the response to ensure it matches our DebateTopic interface
+      return data.map((item: any): DebateTopic => ({
+        id: item.id,
+        theme: item.theme,
+        topic_text: item.topic_text,
+        scheduled_for: item.scheduled_for
+      }));
     }
   });
 
