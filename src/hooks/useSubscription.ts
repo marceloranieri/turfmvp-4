@@ -16,16 +16,18 @@ export const useSubscription = (
     // Create a channel with the specified name
     const channel = supabase.channel(channelName);
     
-    // Configure channel to listen for Postgres changes with the correct method signature
-    const subscription = channel.on('postgres_changes', {
-      event: event,
-      schema: 'public',
-      table: table,
-      ...(filter || {})
-    }, handler);
-
-    // Subscribe to the channel
-    subscription.subscribe();
+    // Configure channel to listen for Postgres changes
+    channel.on(
+      'postgres_changes',
+      {
+        event: event,
+        schema: 'public',
+        table: table,
+        ...(filter || {})
+      },
+      handler
+    )
+    .subscribe();
     
     // Store the channel reference for cleanup
     channelRef.current = channel;
