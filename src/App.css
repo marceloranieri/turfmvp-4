@@ -1,42 +1,50 @@
+
+body {
+  background-color: #000000;
+  color: #FFFFFF;
+  font-family: Arial, sans-serif;
+}
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  min-height: 100vh;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Remove all rounded corners */
+* {
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Remove hover effects */
+button:hover, a:hover {
+  background: none;
+  color: #FFFFFF;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Adjust typography for minimalist style */
+h1, .chat-header {
+  font-size: 24px;
+  font-weight: bold;
 }
 
-.card {
-  padding: 2em;
+p, .message {
+  font-size: 16px;
+  font-weight: normal;
 }
 
-.read-the-docs {
-  color: #888;
+/* Tighten spacing */
+.container {
+  padding: 10px;
+}
+
+.message {
+  margin-bottom: 10px;
+}
+
+ul {
+  margin: 10px 0;
+}
+
+li {
+  margin-bottom: 5px;
 }
