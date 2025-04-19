@@ -1,8 +1,9 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { TurfContextType, User, HarmonyPointReason, HarmonyPointEvent } from '@/types/turf';
 import { MOCK_CURRENT_USER } from '../constants/turf';
 import { MessagesProvider } from './MessagesContext';
-import { NotificationsProvider } from './NotificationsProvider';
+import { NotificationsProvider } from './NotificationsContext';
 import { TopicsProvider } from './TopicsContext';
 
 const TurfContext = createContext<Partial<TurfContextType>>({});
