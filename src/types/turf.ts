@@ -7,7 +7,7 @@ export enum DebatePhase {
 }
 
 export type ReactionType = 'emoji' | 'gif';
-export type MessageTag = 'Sharp Wit' | 'Deep Insight' | 'Valid Question' | 'Strong Evidence';
+export type MessageTag = 'Sharp Wit' | 'Deep Insight' | 'Valid Question' | 'Strong Evidence' | 'Opening Argument';
 
 export interface User {
   id: string;
