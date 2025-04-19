@@ -17,17 +17,19 @@ export const useSubscription = (
     const channel = supabase.channel(channelName);
     
     // Configure channel to listen for Postgres changes
-    channel.on(
-      'postgres_changes',
-      {
-        event: event,
-        schema: 'public',
-        table: table,
-        ...(filter || {})
-      },
-      handler
-    )
-    .subscribe();
+    // The correct syntax is to chain the .on() method and then call .subscribe()
+    const subscription = channel
+      .on(
+        'postgres_changes',
+        {
+          event: event,
+          schema: 'public',
+          table: table,
+          ...(filter || {})
+        },
+        handler
+      )
+      .subscribe();
     
     // Store the channel reference for cleanup
     channelRef.current = channel;
