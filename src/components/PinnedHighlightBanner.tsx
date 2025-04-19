@@ -4,6 +4,7 @@ import { useTurf } from '@/contexts/TurfContext';
 import { Pin, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const PinnedHighlightBanner: React.FC = () => {
   const { pinnedMessageId, messages } = useTurf();
@@ -47,8 +48,11 @@ const PinnedHighlightBanner: React.FC = () => {
   const pinnedMessage = messages?.find(msg => msg.id === pinnedMessageId);
   if (!pinnedMessage) return null;
   
+  // Get replies count for this message
+  const replyCount = messages.filter(msg => msg.parentId === pinnedMessageId).length;
+  
   return (
-    <div className="bg-background border-b border-gold animate-pulse">
+    <div className="bg-[#1A1F2C] border-2 border-gold animate-pulse-slow">
       <div className="px-4 py-2 flex items-center">
         <Pin className="h-5 w-5 text-gold mr-2 shrink-0" />
         
@@ -60,11 +64,14 @@ const PinnedHighlightBanner: React.FC = () => {
           
           <div className="flex-1 min-w-0">
             <div className="text-sm text-gold font-medium flex items-center">
-              <span>PINNED MESSAGE · {timeLeft}s</span>
+              <span>PINCREDIBLE · {timeLeft}s</span>
             </div>
-            <div className="text-base truncate">
+            <div className="text-base truncate text-white">
               <span className="font-medium mr-1">{pinnedMessage.username}:</span>
               {pinnedMessage.content}
+            </div>
+            <div className="text-xs text-gold/70">
+              {pinnedMessage.upvotes} upvotes · {replyCount} {replyCount === 1 ? 'reply' : 'replies'}
             </div>
           </div>
         </div>
@@ -72,7 +79,7 @@ const PinnedHighlightBanner: React.FC = () => {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="ml-2 h-6 w-6" 
+          className="ml-2 h-6 w-6 text-white hover:text-gold/80" 
           onClick={handleDismiss}
         >
           <X className="h-4 w-4" />
