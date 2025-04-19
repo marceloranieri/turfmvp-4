@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Message, ReactionType, User, Notification } from '@/types/turf';
 import { useWizardAI } from '../hooks/useWizardAI';
@@ -113,73 +112,88 @@ export function MessagesProvider({
     onNotification
   );
 
-  // Effect for pinning messages - modified to be every 5 minutes
-  React.useEffect(() => {
-    const pinMessage = () => {
+  // Effect for pinning messages - runs every minute but only pins every 5 minutes
+  useEffect(() => {
+    const checkAndPinMessage = () => {
       const currentTime = Date.now();
       
-      // Check if 5 minutes (300000ms) have passed since the last pin
+      // Only pin if 5 minutes (300000ms) have passed since the last pin
       if (currentTime - lastPinTime < 300000) {
-        console.log("Skipping pin - not yet 5 minutes since last pin");
+        console.log("Skipping pin check - not yet 5 minutes since last pin");
         return;
       }
       
-      const lastMessages = messages
-        .filter(msg => !msg.isAi && new Date(msg.createdAt).getTime() > Date.now() - 20 * 60 * 1000)
-        .sort((a, b) => {
-          // Calculate engagement score: upvotes + replies + reactions
-          const getRepliesCount = (msgId: string) => 
-            messages.filter(m => m.parentId === msgId).length;
-            
-          const engagementA = a.upvotes + getRepliesCount(a.id) + a.reactions.length;
-          const engagementB = b.upvotes + getRepliesCount(b.id) + b.reactions.length;
-          
-          return engagementB - engagementA;
-        });
+      console.log("Checking for messages to pin");
       
-      if (lastMessages.length > 0) {
-        const topMessage = lastMessages[0];
-        const topMessageReplies = messages.filter(m => m.parentId === topMessage.id).length;
-        console.log(`Pinning message with ${topMessage.upvotes} upvotes and ${topMessageReplies} replies`);
-        
-        setPinnedMessageId(topMessage.id);
-        setLastPinTime(currentTime);
-        
-        // Create a notification for the pin
-        const notification: Notification = {
-          id: `notif-pin-${Date.now()}`,
-          userId: topMessage.userId,
-          messageId: topMessage.id,
-          type: "pin",
-          content: `Your message was pinned as Pincredible for high engagement!`,
-          isRead: false,
-          createdAt: new Date().toISOString()
-        };
-        
-        notificationsContext.addNotification(notification);
-        
-        // Unpin after 30 seconds
-        setTimeout(() => {
-          setPinnedMessageId(null);
-          console.log("Unpinned message after 30 seconds");
-        }, 30000);
+      // Find messages from the last 20 minutes that aren't from AI
+      const candidateMessages = messages
+        .filter(msg => 
+          !msg.isAi && 
+          new Date(msg.createdAt).getTime() > (Date.now() - 20 * 60 * 1000)
+        );
+      
+      if (candidateMessages.length === 0) {
+        console.log("No eligible messages to pin");
+        return;
       }
+      
+      // Sort by engagement (upvotes + replies)
+      const sortedMessages = [...candidateMessages].sort((a, b) => {
+        const getRepliesCount = (msgId: string) => 
+          messages.filter(m => m.parentId === msgId).length;
+          
+        const engagementA = a.upvotes + getRepliesCount(a.id) + a.reactions.length;
+        const engagementB = b.upvotes + getRepliesCount(b.id) + b.reactions.length;
+        
+        return engagementB - engagementA;
+      });
+      
+      // Pin the most engaged message
+      const topMessage = sortedMessages[0];
+      const topMessageReplies = messages.filter(m => m.parentId === topMessage.id).length;
+      
+      console.log(`Pinning message with id: ${topMessage.id}, ${topMessage.upvotes} upvotes and ${topMessageReplies} replies`);
+      
+      setPinnedMessageId(topMessage.id);
+      setLastPinTime(currentTime);
+      
+      // Create a notification for the pin
+      const notification: Notification = {
+        id: `notif-pin-${Date.now()}`,
+        userId: topMessage.userId,
+        messageId: topMessage.id,
+        type: "pin",
+        content: `Your message was pinned as Pincredible for high engagement!`,
+        isRead: false,
+        createdAt: new Date().toISOString()
+      };
+      
+      notificationsContext.addNotification(notification);
+      
+      // Unpin after 30 seconds
+      setTimeout(() => {
+        setPinnedMessageId(null);
+        console.log("Unpinned message after 30 seconds");
+      }, 30000);
     };
 
-    // Initial pin after 5 minutes instead of immediately
-    const initialPin = setTimeout(pinMessage, 300000);
+    // Wait 10 seconds before first check to make sure everything is loaded
+    const initialTimeout = setTimeout(() => {
+      console.log("Initial pin check");
+      checkAndPinMessage();
+    }, 10000);
     
-    // Set interval to run every minute to check if 5 minutes have passed
-    const interval = setInterval(pinMessage, 60000);
+    // Check every minute but only pin if 5 minutes have passed
+    const interval = setInterval(checkAndPinMessage, 60000);
     
     return () => {
-      clearTimeout(initialPin);
+      clearTimeout(initialTimeout);
       clearInterval(interval);
     };
   }, [messages, notificationsContext, lastPinTime]);
 
   // Effect for AI responses
-  React.useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(checkForLull, 5000);
     return () => clearInterval(interval);
   }, [checkForLull]);

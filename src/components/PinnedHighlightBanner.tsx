@@ -49,7 +49,7 @@ const PinnedHighlightBanner: React.FC = () => {
   if (!pinnedMessage) return null;
   
   // Get replies count for this message
-  const replyCount = messages.filter(msg => msg.parentId === pinnedMessageId).length;
+  const replyCount = messages?.filter(msg => msg.parentId === pinnedMessageId).length || 0;
   
   return (
     <div className="bg-[#1A1F2C] border-2 border-gold animate-pulse-slow">
