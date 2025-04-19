@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import { useTurf } from '@/contexts/TurfContext';
 import { Progress } from '@/components/ui/progress';
-import { Clock, Users, CircleEllipsis } from 'lucide-react';
+import { Clock, Users, ArrowDown, ArrowUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const CurrentTopicHeader: React.FC = () => {
@@ -41,7 +42,11 @@ const CurrentTopicHeader: React.FC = () => {
               className="h-8 w-8 p-0"
               onClick={() => setShowDescription(!showDescription)}
             >
-              <CircleEllipsis className="h-4 w-4 text-muted-foreground" />
+              {showDescription ? (
+                <ArrowUp className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <ArrowDown className="h-4 w-4 text-muted-foreground" />
+              )}
             </Button>
           </div>
           {showDescription && (
