@@ -1,10 +1,13 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from 'lucide-react';
 
 interface DebateTopic {
   id: number;
@@ -14,6 +17,7 @@ interface DebateTopic {
 }
 
 const DebateCalendar = () => {
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(new Date());
 
   const { data: debateTopics, isLoading } = useQuery({
@@ -43,7 +47,17 @@ const DebateCalendar = () => {
     <div className="flex min-h-screen bg-background p-8">
       <Card className="w-full max-w-4xl mx-auto">
         <CardHeader>
-          <CardTitle>Debate Calendar</CardTitle>
+          <div className="flex items-center space-x-4">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => navigate('/')}
+              className="mr-2"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <CardTitle>Debate Calendar</CardTitle>
+          </div>
         </CardHeader>
         <CardContent className="flex flex-col md:flex-row gap-8">
           <div className="flex-1">
@@ -83,3 +97,4 @@ const DebateCalendar = () => {
 };
 
 export default DebateCalendar;
+
