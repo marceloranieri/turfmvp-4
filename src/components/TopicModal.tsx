@@ -15,7 +15,7 @@ interface TopicModalProps {
     id: number;
     theme: string;
     topic_text: string;
-    scheduled_for: string;
+    debate_date: string;
   } | null;
 }
 
@@ -56,10 +56,10 @@ const TopicModal = ({ isOpen, onClose, topic }: TopicModalProps) => {
           <div className="space-y-4">
             <div className="flex items-baseline space-x-2">
               <span className="text-sm text-muted-foreground">
-                {format(new Date(topic.scheduled_for), 'MMM')}
+                {format(new Date(topic.debate_date), 'MMM')}
               </span>
               <span className="text-4xl font-bold">
-                {format(new Date(topic.scheduled_for), 'd')}
+                {format(new Date(topic.debate_date), 'd')}
               </span>
             </div>
             
