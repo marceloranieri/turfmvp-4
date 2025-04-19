@@ -1,6 +1,12 @@
-
 export type ReactionType = 'emoji' | 'gif';
 export type MessageTag = 'Sharp Wit' | 'Deep Insight' | 'Valid Question' | 'Strong Evidence';
+
+export type HarmonyPointReason = 
+  | 'initial_post'
+  | 'quality_contribution'
+  | 'audience_reaction'
+  | 'audience_engagement'
+  | 'brain_award';
 
 export interface User {
   id: string;
@@ -9,6 +15,8 @@ export interface User {
   harmonyPoints: number;
   brainAwardsGiven: number;
   brainAwardsReceived: number;
+  harmonyPointEvents: HarmonyPointEvent[];
+  totalHarmonyPoints: number;
 }
 
 export interface Reaction {
@@ -54,6 +62,15 @@ export interface DebateTopic {
   endTime: string;
 }
 
+export interface HarmonyPointEvent {
+  id: string;
+  userId: string;
+  amount: number;
+  reason: HarmonyPointReason;
+  createdAt: string;
+  relatedMessageId?: string;
+}
+
 export interface TurfContextType {
   currentUser: User | null;
   messages: Message[];
@@ -72,7 +89,11 @@ export interface TurfContextType {
   markNotificationsAsRead: () => void;
   toggleDarkMode: () => void;
   
-  // Add these methods to match what's being used in TurfContext.tsx
-  updateHarmonyPoints: (points: number) => void;
-  updateBrainAwards: () => void;
+  awardHarmonyPoints: (
+    userId: string, 
+    amount: number, 
+    reason: HarmonyPointReason,
+    relatedMessageId?: string
+  ) => void;
+  calculateUserHarmonyPoints: (userId: string) => number;
 }
