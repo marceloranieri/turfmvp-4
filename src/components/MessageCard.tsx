@@ -12,11 +12,27 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 interface MessageCardProps {
   message: Message;
   isPinned?: boolean;
 }
+
+// Common emoji options for the emoji picker
+const EMOJI_OPTIONS = ['👍', '❤️', '😂', '🔥', '🎉', '👏', '🙌', '🤔', '😮', '😢'];
+
+// Sample GIF options (in a real app, these would come from Giphy API)
+const GIF_OPTIONS = [
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWhwZnZidnhuZ2I1YWk4N21wcHYxMnR3MWZobndpNW9zaXc5NmEwZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TFUd6cS3rAiXYlHhG9/giphy.gif',
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWw2a3JvdHNxdmd6ZWNvc3UzcGYzcXJ2cjY2NTJvZHZ0eDVqMDV2eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/JIX9t2j0ZTN9S/giphy.gif',
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGhvNXBkcDF6aGllNGpiNWcyajFrZGtpamowNWtjN2wzdTNtZGwxaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oEjHAUOqG3lSS0f1C/giphy.gif',
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXpzaDdocTJ1NGx3MWoweGRrbG8wZXZxemdzM3owMXAxZnU1YW9vNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kc0kTO5hBOEoM/giphy.gif',
+];
 
 const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) => {
   const { 
@@ -25,7 +41,8 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) 
     downvoteMessage, 
     awardBrain, 
     messages,
-    addReaction
+    addReaction,
+    sendMessage
   } = useTurf();
   
   const [showActions, setShowActions] = useState(false);
@@ -70,16 +87,26 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) 
     }
   };
   
-  const handleReply = () => {
-    setIsReplying(!isReplying);
+  // Function to handle the reply submission
+  const handleReplySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (replyText.trim()) {
+      sendMessage(replyText, message.id); // Send as a reply to the current message
+      setReplyText('');
+      setIsReplying(false);
+    }
   };
   
-  const handleAddReaction = () => {
-    // In a real app, would open emoji picker
-    // For demo, let's just add a random emoji
-    const emojis = ['👍', '❤️', '🔥', '🎉', '😂', '🙌', '👏', '🤔'];
-    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-    addReaction(message.id, 'emoji' as ReactionType, randomEmoji);
+  // Function to handle adding emoji reaction
+  const handleAddEmoji = (emoji: string) => {
+    addReaction(message.id, 'emoji' as ReactionType, emoji);
+  };
+  
+  // Function to handle adding GIF reaction
+  const handleAddGif = (gifUrl: string) => {
+    // In a real app, this would add the GIF as a reaction
+    addReaction(message.id, 'gif' as ReactionType, gifUrl);
   };
   
   const canAwardBrain = !isFromCurrentUser && currentUser?.brainAwardsGiven < 3;
@@ -215,22 +242,61 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) 
               <span className="text-xs">{message.downvotes > 0 ? message.downvotes : ''}</span>
             </Button>
             
-            <Button variant="ghost" size="sm" className="h-7 px-2 text-muted-foreground" onClick={handleReply}>
-              <MessageSquare className="h-4 w-4" />
-            </Button>
-            
-            <Button variant="ghost" size="sm" className="h-7 px-2 text-muted-foreground">
-              <Smile className="h-4 w-4" />
-            </Button>
-            
             <Button 
               variant="ghost" 
               size="sm" 
-              className="h-7 px-2 text-muted-foreground"
-              onClick={handleAddReaction}
+              className="h-7 px-2 text-muted-foreground" 
+              onClick={() => setIsReplying(!isReplying)}
             >
-              <Image className="h-4 w-4" />
+              <MessageSquare className="h-4 w-4" />
             </Button>
+            
+            {/* Emoji Reaction Button with Popover */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-7 px-2 text-muted-foreground">
+                  <Smile className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="p-2 w-auto">
+                <div className="flex flex-wrap gap-2 max-w-[200px]">
+                  {EMOJI_OPTIONS.map((emoji, index) => (
+                    <button
+                      key={index}
+                      className="text-lg hover:bg-muted p-1 rounded cursor-pointer"
+                      onClick={() => handleAddEmoji(emoji)}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+            
+            {/* GIF Button with Popover */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-7 px-2 text-muted-foreground">
+                  <Image className="h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="p-2 w-auto">
+                <div className="grid grid-cols-2 gap-2">
+                  {GIF_OPTIONS.map((gifUrl, index) => (
+                    <img
+                      key={index}
+                      src={gifUrl}
+                      alt="GIF option"
+                      className="w-[100px] h-[75px] object-cover rounded cursor-pointer hover:opacity-80"
+                      onClick={() => handleAddGif(gifUrl)}
+                    />
+                  ))}
+                </div>
+                <div className="text-xs text-center mt-2 text-muted-foreground">
+                  Powered by GIPHY
+                </div>
+              </PopoverContent>
+            </Popover>
             
             <Button 
               variant="ghost" 
@@ -248,6 +314,38 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) 
               </span>
             </Button>
           </div>
+          
+          {/* Reply form */}
+          {isReplying && (
+            <div className="mt-3 pl-3 border-l-2 border-primary/30">
+              <form onSubmit={handleReplySubmit} className="flex gap-2">
+                <input
+                  type="text"
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  placeholder={`Reply to ${message.username}...`}
+                  className="flex-1 px-3 py-1.5 text-sm bg-muted rounded border-0 focus:ring-1 focus:ring-primary"
+                  autoFocus
+                />
+                <Button 
+                  type="submit" 
+                  size="sm" 
+                  variant="outline"
+                  disabled={!replyText.trim()}
+                >
+                  Reply
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setIsReplying(false)}
+                >
+                  Cancel
+                </Button>
+              </form>
+            </div>
+          )}
         </div>
       </div>
     </div>
