@@ -1,6 +1,4 @@
-
 export enum DebatePhase {
-  OPENING_ARGUMENTS = "Opening Arguments",
   REBUTTALS = "Rebuttals",
   COUNTERPOINTS = "Counterpoints",
   CONCLUSION = "Conclusion"

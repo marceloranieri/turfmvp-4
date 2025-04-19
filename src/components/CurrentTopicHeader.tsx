@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTurf } from '@/contexts/TurfContext';
 import { DebatePhase } from '@/types/turf';
@@ -14,8 +13,6 @@ const CurrentTopicHeader: React.FC = () => {
 
   const getPhaseColor = () => {
     switch (currentTopic.currentPhase) {
-      case DebatePhase.OPENING_ARGUMENTS:
-        return "bg-blue-500";
       case DebatePhase.REBUTTALS:
         return "bg-orange-500";
       case DebatePhase.COUNTERPOINTS:

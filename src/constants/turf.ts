@@ -1,4 +1,3 @@
-
 import { DebatePhase, Message } from '../types/turf';
 
 export const AI_NOTIFICATION_LINES = [
@@ -27,7 +26,7 @@ export const INITIAL_TOPIC = {
   id: "topic-1",
   title: "Is remote work here to stay post-pandemic?",
   description: "Discuss the long-term viability of remote work arrangements and their impact on productivity, well-being, and organizational culture.",
-  currentPhase: DebatePhase.OPENING_ARGUMENTS,
+  currentPhase: DebatePhase.REBUTTALS,
   startTime: new Date().toISOString(),
   endTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
 };
@@ -40,7 +39,6 @@ export const AI_MESSAGES = [
   "Remote work could reshape urban centers. If knowledge workers leave cities, how might that affect local economies and housing markets? [Source: https://example.com/remote-urban-impact]"
 ];
 
-// Add the missing INITIAL_MESSAGES constant
 export const INITIAL_MESSAGES: Message[] = [
   {
     id: "msg-1",
@@ -55,7 +53,7 @@ export const INITIAL_MESSAGES: Message[] = [
     reactions: [],
     upvotes: 5,
     downvotes: 1,
-    tags: ["Opening Argument"],
+    tags: ["Valid Question"],
     brainAwards: 1
   },
   {
@@ -107,4 +105,3 @@ export const INITIAL_MESSAGES: Message[] = [
     brainAwards: 0
   }
 ];
-
