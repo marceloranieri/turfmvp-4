@@ -15,9 +15,11 @@ export const useSubscription = (
   useEffect(() => {
     const channel = supabase.channel(channelName);
     
+    // Use the correct typing for Supabase's realtime subscription
+    // The 'postgres_changes' event is a valid event type for Supabase channels
     channel
       .on(
-        'postgres_changes' as any,  // Type assertion to fix TS error
+        'postgres_changes',
         {
           event: event,
           schema: 'public',
