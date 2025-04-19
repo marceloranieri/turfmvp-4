@@ -53,7 +53,7 @@ const MessageComposer: React.FC = () => {
   };
   
   return (
-    <div className="border-t border-border p-4 bg-background backdrop-blur-sm">
+    <div className="border-t border-[#E3E5E8] p-4 bg-white">
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <div className="flex items-center gap-2">
           <TooltipProvider>
@@ -63,7 +63,7 @@ const MessageComposer: React.FC = () => {
                   type="button" 
                   variant="ghost" 
                   size="icon"
-                  className="rounded-full hover:bg-backgroundHover text-textMuted hover:text-text transition-colors"
+                  className="rounded-full hover:bg-[#F6F6F6] text-[#72767D] hover:text-[#2C2F33] transition-colors"
                   onClick={() => console.log('Attach file clicked')}
                   aria-label="Attach file"
                 >
@@ -102,7 +102,7 @@ const MessageComposer: React.FC = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder={`Message ${currentTopic ? currentTopic.title : 'the chat'}...`}
-          className="flex-1 bg-black/20 backdrop-blur-sm border border-white/10 focus:ring-1 focus:ring-white/20 text-sm rounded-md px-4 py-2.5 placeholder:text-muted-foreground"
+          className="flex-1 bg-[#F6F6F6] border border-[#DCDDDF] focus:border-[#00A8FC] text-[#2C2F33] text-sm rounded-md px-4 py-2.5 placeholder:text-[#72767D]"
         />
         
         <div className="flex items-center gap-2">
