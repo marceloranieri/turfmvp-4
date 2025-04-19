@@ -1,11 +1,12 @@
 
 import React from 'react';
 import { format } from "date-fns";
-import { X, Share2, CalendarPlus } from "lucide-react";
+import { Share2, CalendarPlus } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 
 interface TopicModalProps {
   isOpen: boolean;
@@ -30,14 +31,27 @@ const TopicModal = ({ isOpen, onClose, topic }: TopicModalProps) => {
     { id: 5, name: 'IJ' },
   ];
 
-  const truncatedText = topic.topic_text.length > 200 
-    ? `${topic.topic_text.slice(0, 200)}...` 
-    : topic.topic_text;
+  const handleAddToCalendar = () => {
+    // In a real app, this would integrate with calendar APIs
+    console.log('Adding to calendar:', topic);
+  };
+
+  const handleShare = () => {
+    // In a real app, this would open a share dialog
+    console.log('Sharing topic:', topic);
+  };
+
+  // Create hashtags from the theme
+  const hashtags = topic.theme.toLowerCase().split(' & ').map(tag => tag.replace(/\s+/g, ''));
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
-        <div className="grid gap-6">
+      <DialogContent className="sm:max-w-[600px] p-0 gap-0 overflow-hidden">
+        {/* Header Image - Using a gradient as placeholder */}
+        <div className="h-32 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600" />
+
+        {/* Content Section */}
+        <div className="p-6 space-y-6">
           {/* Date and Title Section */}
           <div className="space-y-4">
             <div className="flex items-baseline space-x-2">
@@ -50,38 +64,51 @@ const TopicModal = ({ isOpen, onClose, topic }: TopicModalProps) => {
             </div>
             
             <div>
-              <h2 className="text-xl font-semibold mb-4">{truncatedText}</h2>
+              <h2 className="text-xl font-semibold mb-4">{topic.topic_text}</h2>
               <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary" className="text-xs">
-                  #{topic.theme.toLowerCase().replace(/ & /g, '-')}
-                </Badge>
+                {hashtags.map((tag) => (
+                  <Badge key={tag} variant="secondary" className="text-xs">
+                    #{tag}
+                  </Badge>
+                ))}
               </div>
             </div>
           </div>
 
+          <Separator />
+
           {/* Participants Section */}
-          <div className="flex -space-x-2">
-            {mockParticipants.map((participant) => (
-              <Avatar key={participant.id} className="border-2 border-background">
-                <AvatarFallback className="bg-primary text-primary-foreground">
-                  {participant.name}
+          <div>
+            <div className="flex -space-x-2 mb-4">
+              {mockParticipants.map((participant) => (
+                <Avatar key={participant.id} className="border-2 border-background">
+                  <AvatarFallback className="bg-primary text-primary-foreground">
+                    {participant.name}
+                  </AvatarFallback>
+                </Avatar>
+              ))}
+              <Avatar className="border-2 border-background">
+                <AvatarFallback className="bg-primary/20">
+                  +99
                 </AvatarFallback>
               </Avatar>
-            ))}
-            <Avatar className="border-2 border-background">
-              <AvatarFallback className="bg-primary/20">
-                +99
-              </AvatarFallback>
-            </Avatar>
+            </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3 mt-4">
-            <Button className="flex-1">
+          <div className="flex gap-3">
+            <Button 
+              className="flex-1" 
+              onClick={handleAddToCalendar}
+            >
               <CalendarPlus className="mr-2 h-4 w-4" />
               Add to Calendar
             </Button>
-            <Button variant="outline" className="flex-1">
+            <Button 
+              variant="outline" 
+              className="flex-1"
+              onClick={handleShare}
+            >
               <Share2 className="mr-2 h-4 w-4" />
               Share
             </Button>
