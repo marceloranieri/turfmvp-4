@@ -43,7 +43,6 @@ const MessageHeader: React.FC<MessageHeaderProps> = ({
           </span>
         )}
       </span>
-      <span className="text-xs text-muted-foreground">{timestamp}</span>
       
       {tags.length > 0 && (
         <div className="flex gap-1">
