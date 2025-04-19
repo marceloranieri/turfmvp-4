@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTurf } from '@/contexts/TurfContext';
 import { Progress } from '@/components/ui/progress';
-import { Clock, Users } from 'lucide-react';
+import { Clock, Users, ArrowUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const CurrentTopicHeader: React.FC = () => {
@@ -41,11 +41,9 @@ const CurrentTopicHeader: React.FC = () => {
               className="h-8 w-8 p-0"
               onClick={() => setShowDescription(!showDescription)}
             >
-              <img 
-                src="/lovable-uploads/6fedec80-c193-4e77-bac3-e7b3230c9d7d.png" 
-                alt="Toggle description" 
-                className={`h-4 w-4 transform transition-transform ${
-                  showDescription ? 'rotate-180' : 'rotate-0'
+              <ArrowUp 
+                className={`h-4 w-4 text-muted-foreground transform transition-transform ${
+                  showDescription ? 'rotate-0' : 'rotate-180'
                 }`} 
               />
             </Button>
