@@ -64,7 +64,6 @@ export const TurfProvider: React.FC<{ children: React.ReactNode }> = ({ children
     currentUser,
     darkMode,
     toggleDarkMode,
-    // Remove the updateHarmonyPoints method since it's not in the TurfContextType interface
     awardHarmonyPoints,
     calculateUserHarmonyPoints
   };
