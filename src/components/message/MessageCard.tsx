@@ -11,6 +11,7 @@ import MessageReactions from './MessageReactions';
 import MessageActions from './MessageActions';
 import MessageReplyForm from './MessageReplyForm';
 import { useMessageActions } from '@/hooks/useMessageActions';
+import { useSubscription } from '@/hooks/useSubscription';
 
 interface MessageCardProps {
   message: Message;
@@ -39,6 +40,19 @@ const MessageCard: React.FC<MessageCardProps> = ({
     handleReaction,
     toggleReply
   } = useMessageActions(message);
+  
+  // Real-time reaction updates for this specific message
+  useSubscription(
+    `message-reactions-${message.id}`,
+    'message_reactions',
+    'INSERT',
+    (payload) => {
+      if (payload.new.message_id === message.id) {
+        console.log('New reaction:', payload.new);
+        // The context will handle the actual state update
+      }
+    }
+  );
   
   // Memoize linked message lookup to prevent recalculation
   const linkedMessage = useMemo(() => {
@@ -73,14 +87,14 @@ const MessageCard: React.FC<MessageCardProps> = ({
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
-      <div className="flex gap-3">
+      <div className="flex gap-3 flex-col sm:flex-row">
         {!isSequence ? (
           <Avatar className="h-10 w-10 shrink-0 mt-0.5">
             <AvatarImage src={message.avatarUrl} alt={message.username} />
             <AvatarFallback>{message.username.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
         ) : (
-          <div className="w-10 shrink-0"></div>
+          <div className="w-10 shrink-0 hidden sm:block"></div>
         )}
         
         <div className="flex-1 min-w-0">
@@ -111,19 +125,21 @@ const MessageCard: React.FC<MessageCardProps> = ({
           
           <MessageReactions reactions={message.reactions} />
           
-          <MessageActions
-            upvotes={message.upvotes}
-            downvotes={message.downvotes}
-            onUpvote={handleUpvote}
-            onDownvote={handleDownvote}
-            onReplyClick={toggleReply}
-            onEmojiSelect={(emoji: string) => handleReaction('emoji', emoji)}
-            onGifSelect={(gifUrl: string) => handleReaction('gif', gifUrl)}
-            onBrainAward={handleBrainAward}
-            canAwardBrain={canAwardBrain}
-            brainAwardsLeft={brainAwardsLeft}
-            showActions={showActions}
-          />
+          <div className="flex flex-wrap gap-2 mt-2 sm:mt-1">
+            <MessageActions
+              upvotes={message.upvotes}
+              downvotes={message.downvotes}
+              onUpvote={handleUpvote}
+              onDownvote={handleDownvote}
+              onReplyClick={toggleReply}
+              onEmojiSelect={(emoji: string) => handleReaction('emoji', emoji)}
+              onGifSelect={(gifUrl: string) => handleReaction('gif', gifUrl)}
+              onBrainAward={handleBrainAward}
+              canAwardBrain={canAwardBrain}
+              brainAwardsLeft={brainAwardsLeft}
+              showActions={showActions}
+            />
+          </div>
           
           {isReplying && (
             <MessageReplyForm

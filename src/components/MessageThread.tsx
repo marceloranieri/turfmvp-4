@@ -4,10 +4,22 @@ import { useTurf } from '@/contexts/TurfContext';
 import MessageCard from './message/MessageCard';
 import { Message } from '@/types/turf';
 import { cn } from '@/lib/utils';
+import { useSubscription } from '@/hooks/useSubscription';
 
 const MessageThread: React.FC = () => {
   const { messages, pinnedMessageId } = useTurf();
   const threadEndRef = useRef<HTMLDivElement>(null);
+  
+  // Subscribe to real-time message updates
+  useSubscription(
+    'public:messages',
+    'messages',
+    'INSERT',
+    (payload) => {
+      console.log('New message received:', payload.new);
+      // The TurfContext will handle the actual state update
+    }
+  );
   
   // Scroll to bottom when new messages arrive
   useEffect(() => {

@@ -91,9 +91,9 @@ const messageReducer = (state: MessageState, action: MessageAction): MessageStat
 
 /**
  * Custom hook for managing chat messages with real-time updates
- * @param topicId Optional topic ID to filter messages
+ * @param roomId Optional room ID to filter messages
  */
-export const useChat = (topicId?: string) => {
+export const useChat = (roomId?: string) => {
   const [state, dispatch] = useReducer(messageReducer, initialState);
   
   // Fetch initial messages - using mock data since we don't have the messages table yet in Supabase
@@ -138,23 +138,25 @@ export const useChat = (topicId?: string) => {
     };
     
     fetchMessages();
-  }, [topicId]);
+  }, [roomId]);
   
   // Handler for new messages
   const handleNewMessage = useCallback((payload: any) => {
     const newMessage = payload.new as Message;
-    if (!topicId || newMessage.topicId === topicId) {
+    // Instead of filtering by topicId, we now filter by roomId if provided
+    if (!roomId || newMessage.parentId === roomId) {
       dispatch({ type: 'ADD_MESSAGE', payload: newMessage });
     }
-  }, [topicId]);
+  }, [roomId]);
 
   // Handler for updated messages
   const handleUpdatedMessage = useCallback((payload: any) => {
     const updatedMessage = payload.new as Message;
-    if (!topicId || updatedMessage.topicId === topicId) {
+    // Instead of filtering by topicId, we now filter by roomId if provided
+    if (!roomId || updatedMessage.parentId === roomId) {
       dispatch({ type: 'UPDATE_MESSAGE', payload: updatedMessage });
     }
-  }, [topicId]);
+  }, [roomId]);
 
   // Handler for new reactions
   const handleNewReaction = useCallback((payload: any) => {
@@ -226,7 +228,7 @@ export const useChat = (topicId?: string) => {
         content,
         parent_id: parentId || null,
         link_to: linkToId || null,
-        topic_id: topicId || null
+        room_id: roomId || null
       };
       
       // Since we don't have the actual messages table yet, we'll mock the response
@@ -237,7 +239,7 @@ export const useChat = (topicId?: string) => {
       console.error('Error sending message:', error);
       throw error;
     }
-  }, [topicId]);
+  }, [roomId]);
   
   // Add a reaction to a message
   const addReaction = useCallback(async (messageId: string, type: string, value: string) => {
