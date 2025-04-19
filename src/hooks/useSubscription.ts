@@ -17,7 +17,7 @@ export const useSubscription = (
     const channel = supabase.channel(channelName);
     
     // Configure channel to listen for Postgres changes
-    channel.on(
+    let subscription = channel.on(
       'postgres_changes',
       {
         event: event,
@@ -26,8 +26,10 @@ export const useSubscription = (
         ...(filter || {})
       },
       handler
-    )
-    .subscribe();
+    );
+    
+    // Subscribe to the channel
+    subscription.subscribe();
     
     // Store the channel reference for cleanup
     channelRef.current = channel;
