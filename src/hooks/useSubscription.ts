@@ -22,14 +22,13 @@ export const useSubscription = (
     
     // Add the postgres_changes listener with proper configuration
     const subscription = channel
-      .on(
-        'postgres_changes',
+      .on('postgres_changes', 
         {
-          event: event,
+          event: `${event}:*`, // Append wildcard to match Supabase's event syntax
           schema: 'public',
           table: table,
           ...(filter || {})
-        },
+        }, 
         (payload) => {
           handler(payload);
         }
