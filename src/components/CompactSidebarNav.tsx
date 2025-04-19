@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useTurf } from '@/contexts/TurfContext';
-import { Home, Bell, Search, Settings } from 'lucide-react';
+import { Home, Bell, Search, Settings, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -82,7 +82,26 @@ const CompactSidebarNav: React.FC = () => {
         </TooltipProvider>
       </div>
       
-      <div className="mt-auto">
+      <div className="mt-auto relative flex flex-col items-center">
+        {/* Calendar icon button */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="icon"
+                className="absolute bottom-14 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full hover:bg-muted/30" 
+              >
+                <Calendar className="h-5 w-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>Calendar</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        {/* User avatar with Settings button */}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
