@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { useTurf } from '@/contexts/TurfContext';
 import MessageCard from './message/MessageCard';
 import { Message } from '@/types/turf';
@@ -16,14 +16,14 @@ const MessageThread: React.FC = () => {
     }
   }, [messages]);
 
-  // Group messages by timeframe
-  const groupMessages = (msgs: Message[]) => {
-    if (!msgs || !msgs.length) return [];
+  // Group messages by timeframe - memoized to prevent recalculation
+  const messageGroups = useMemo(() => {
+    if (!messages || !messages.length) return [];
     
     const groups: { date: string; messages: Message[] }[] = [];
     let currentDate = '';
     
-    msgs.forEach(msg => {
+    messages.forEach(msg => {
       const messageDate = new Date(msg.createdAt).toLocaleDateString();
       
       if (messageDate !== currentDate) {
@@ -38,9 +38,7 @@ const MessageThread: React.FC = () => {
     });
     
     return groups;
-  };
-  
-  const messageGroups = groupMessages(messages || []);
+  }, [messages]);
 
   return (
     <div className="flex-1 overflow-y-auto px-4 py-2 scroll-smooth">
@@ -62,6 +60,7 @@ const MessageThread: React.FC = () => {
                                   !message.parentId &&
                                   (new Date(message.createdAt).getTime() - new Date(prevMessage.createdAt).getTime() < 5 * 60 * 1000);
                 
+                // Use React memo to prevent unnecessary re-renders
                 return (
                   <MessageCard 
                     key={message.id} 
@@ -87,4 +86,4 @@ const MessageThread: React.FC = () => {
   );
 };
 
-export default MessageThread;
+export default React.memo(MessageThread);

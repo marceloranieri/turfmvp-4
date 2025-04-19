@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTurf } from '@/contexts/TurfContext';
 import { Message } from '@/types/turf';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -18,6 +18,7 @@ interface MessageCardProps {
   isSequence?: boolean;
 }
 
+// Memo component to prevent unnecessary re-renders
 const MessageCard: React.FC<MessageCardProps> = ({ 
   message, 
   isPinned = false, 
@@ -39,14 +40,27 @@ const MessageCard: React.FC<MessageCardProps> = ({
     toggleReply
   } = useMessageActions(message);
   
-  const linkedMessage = message.linkTo && messages
-    ? messages.find(m => m.id === message.linkTo) 
-    : null;
+  // Memoize linked message lookup to prevent recalculation
+  const linkedMessage = useMemo(() => {
+    if (!message.linkTo || !messages) return null;
+    return messages.find(m => m.id === message.linkTo);
+  }, [message.linkTo, messages]);
   
-  const formattedTime = new Date(message.createdAt).toLocaleTimeString([], { 
-    hour: 'numeric',
-    minute: '2-digit'
-  });
+  // Memoize time formatting
+  const formattedTime = useMemo(() => {
+    return new Date(message.createdAt).toLocaleTimeString([], { 
+      hour: 'numeric',
+      minute: '2-digit'
+    });
+  }, [message.createdAt]);
+
+  // Group reactions by type for more efficient rendering
+  const groupedReactions = useMemo(() => {
+    return message.reactions.reduce((acc: Record<string, number>, reaction) => {
+      acc[reaction.value] = (acc[reaction.value] || 0) + 1;
+      return acc;
+    }, {});
+  }, [message.reactions]);
 
   return (
     <div 
@@ -124,4 +138,14 @@ const MessageCard: React.FC<MessageCardProps> = ({
   );
 };
 
-export default MessageCard;
+// Use React.memo with custom comparison to prevent unnecessary re-renders
+export default React.memo(MessageCard, (prevProps, nextProps) => {
+  // Only re-render when these properties change
+  return prevProps.message.id === nextProps.message.id &&
+         prevProps.isPinned === nextProps.isPinned &&
+         prevProps.isSequence === nextProps.isSequence &&
+         prevProps.message.upvotes === nextProps.message.upvotes &&
+         prevProps.message.downvotes === nextProps.message.downvotes &&
+         prevProps.message.brainAwards === nextProps.message.brainAwards &&
+         prevProps.message.reactions.length === nextProps.message.reactions.length;
+});
