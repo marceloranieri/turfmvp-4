@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useTurf } from '@/contexts/TurfContext';
 import { Trophy, Activity } from 'lucide-react';
@@ -53,27 +54,10 @@ const LiveUpdatesPanel: React.FC = () => {
             ))}
           </div>
         </div>
-
-        <div>
-          <div className="text-xs uppercase text-muted-foreground font-medium tracking-wider mb-3 flex items-center gap-1">
-            <Activity className="h-3 w-3" />
-            <span>ACTIVITY</span>
-          </div>
-          
-          <div className="space-y-1 text-xs text-muted-foreground">
-            <div className="flex items-center justify-between">
-              <span>Messages in chat:</span>
-              <span className="font-medium">{messages?.length || 0}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>Active participants:</span>
-              <span className="font-medium">{Object.keys(userAwards || {}).length}</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
 };
 
 export default LiveUpdatesPanel;
+
