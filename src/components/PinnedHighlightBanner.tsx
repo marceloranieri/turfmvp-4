@@ -35,24 +35,27 @@ const PinnedHighlightBanner: React.FC = () => {
   if (!pinnedMessage) return null;
   
   return (
-    <div className="bg-gold/10 border-b border-gold/40 animate-slide-in overflow-hidden">
+    <div className="bg-background border-b border-gold">
       <div className="px-4 py-2 flex items-center">
-        <Pin className="h-4 w-4 text-gold mr-2 shrink-0" />
+        <Pin className="h-5 w-5 text-gold mr-2 shrink-0" />
         
         <div className="flex-1 min-w-0">
-          <div className="text-xs text-gold/80 font-medium">
+          <div className="text-sm text-gold font-medium">
             PINNED MESSAGE · {timeLeft}s
           </div>
-          <div className="text-sm truncate">
+          <div className="text-base truncate">
             <span className="font-medium mr-1">{pinnedMessage.username}:</span>
             {pinnedMessage.content}
           </div>
         </div>
       </div>
       
-      {/* Timer bar */}
-      <div className="h-0.5 bg-gold/30">
-        <div className="h-full bg-gold animate-countdown" />
+      {/* Gold timer bar */}
+      <div className="h-1 bg-gold/30 w-full">
+        <div 
+          className="h-full bg-gold transition-all duration-1000 ease-linear" 
+          style={{ width: `${(timeLeft / 30) * 100}%` }}
+        />
       </div>
     </div>
   );

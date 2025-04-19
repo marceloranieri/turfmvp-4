@@ -8,7 +8,7 @@ const MessageThread: React.FC = () => {
   
   return (
     <div className="flex-1 overflow-y-auto px-0 py-2">
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-1">
         {messages.map(message => (
           <MessageCard 
             key={message.id} 
