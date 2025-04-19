@@ -1,11 +1,6 @@
-export enum DebatePhase {
-  REBUTTALS = "Rebuttals",
-  COUNTERPOINTS = "Counterpoints",
-  CONCLUSION = "Conclusion"
-}
 
 export type ReactionType = 'emoji' | 'gif';
-export type MessageTag = 'Sharp Wit' | 'Deep Insight' | 'Valid Question' | 'Strong Evidence' | 'Opening Argument';
+export type MessageTag = 'Sharp Wit' | 'Deep Insight' | 'Valid Question' | 'Strong Evidence';
 
 export interface User {
   id: string;
@@ -55,7 +50,6 @@ export interface DebateTopic {
   id: string;
   title: string;
   description: string;
-  currentPhase: DebatePhase;
   startTime: string;
   endTime: string;
 }

@@ -1,4 +1,5 @@
-import { DebatePhase, Message } from '../types/turf';
+
+import { Message } from '../types/turf';
 
 export const AI_NOTIFICATION_LINES = [
   "Wiz just tossed a thought grenade.",
@@ -26,7 +27,6 @@ export const INITIAL_TOPIC = {
   id: "topic-1",
   title: "Is remote work here to stay post-pandemic?",
   description: "Discuss the long-term viability of remote work arrangements and their impact on productivity, well-being, and organizational culture.",
-  currentPhase: DebatePhase.REBUTTALS,
   startTime: new Date().toISOString(),
   endTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
 };
@@ -69,7 +69,7 @@ export const INITIAL_MESSAGES: Message[] = [
     reactions: [],
     upvotes: 3,
     downvotes: 0,
-    tags: ["Opening Argument"],
+    tags: [],
     brainAwards: 0
   },
   {
@@ -85,7 +85,7 @@ export const INITIAL_MESSAGES: Message[] = [
     reactions: [],
     upvotes: 7,
     downvotes: 2,
-    tags: ["Opening Argument"],
+    tags: [],
     brainAwards: 2
   },
   {

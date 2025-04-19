@@ -1,28 +1,13 @@
+
 import React from 'react';
 import { useTurf } from '@/contexts/TurfContext';
-import { DebatePhase } from '@/types/turf';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Clock, Users } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 const CurrentTopicHeader: React.FC = () => {
   const { currentTopic } = useTurf();
 
   if (!currentTopic) return null;
-
-  const getPhaseColor = () => {
-    switch (currentTopic.currentPhase) {
-      case DebatePhase.REBUTTALS:
-        return "bg-orange-500";
-      case DebatePhase.COUNTERPOINTS:
-        return "bg-purple-500";
-      case DebatePhase.CONCLUSION:
-        return "bg-green-500";
-      default:
-        return "bg-gray-500";
-    }
-  };
 
   const startDate = new Date(currentTopic.startTime);
   const endDate = new Date(currentTopic.endTime);
@@ -53,10 +38,6 @@ const CurrentTopicHeader: React.FC = () => {
       </div>
       
       <div className="flex items-center gap-3 mt-3">
-        <Badge className={cn("text-white", getPhaseColor())}>
-          {currentTopic.currentPhase}
-        </Badge>
-        
         <div className="flex items-center text-xs text-muted-foreground">
           <Users className="h-3.5 w-3.5 mr-1" />
           <span>12 participants</span>
