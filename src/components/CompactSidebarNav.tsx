@@ -1,26 +1,27 @@
+
 import React from 'react';
 import { useTurf } from '@/contexts/TurfContext';
-import { Bell, Search, Settings, Home, Users, MessageSquare, Calendar, User } from 'lucide-react';
+import { Home, Bell, Search, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const CompactSidebarNav: React.FC = () => {
-  const { currentUser, unreadNotificationsCount } = useTurf();
+  const { currentUser } = useTurf();
   
   return (
-    <div className="h-full w-full flex flex-col items-center py-4 bg-sidebar">
-      <div className="flex flex-col items-center gap-2 px-2 mt-2 flex-1">
+    <div className="h-full w-[72px] flex flex-col items-center py-4 bg-sidebar border-r border-border">
+      <div className="flex flex-col items-center gap-2 w-full">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="w-12 h-12 rounded-full bg-primary flex justify-center"
+                className="w-12 h-12 rounded-full bg-primary/10 hover:bg-primary/20"
               >
-                <Home className="h-5 w-5 text-white" />
+                <Home className="h-5 w-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="right">
@@ -28,77 +29,16 @@ const CompactSidebarNav: React.FC = () => {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        
+
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="w-12 h-12 rounded-full hover:bg-muted/30 flex justify-center"
+                className="w-12 h-12 rounded-full hover:bg-muted/30"
               >
-                <MessageSquare className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right">
-              <p>Debates</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="w-12 h-12 rounded-full hover:bg-muted/30 flex justify-center"
-              >
-                <Users className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right">
-              <p>Top Debaters</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="w-12 h-12 rounded-full hover:bg-muted/30 flex justify-center"
-              >
-                <Calendar className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right">
-              <p>Upcoming Topics</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        
-        <div className="flex-1"></div>
-        
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="w-12 h-12 rounded-full hover:bg-muted/30 flex justify-center relative"
-                asChild
-              >
-                <label htmlFor="notification-dialog">
-                  <Bell className="h-5 w-5" />
-                  {unreadNotificationsCount > 0 && (
-                    <span className="absolute top-1 right-1 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
-                      {unreadNotificationsCount}
-                    </span>
-                  )}
-                </label>
+                <Bell className="h-5 w-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="right">
@@ -106,14 +46,14 @@ const CompactSidebarNav: React.FC = () => {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        
+
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="w-12 h-12 rounded-full hover:bg-muted/30 flex justify-center"
+                className="w-12 h-12 rounded-full hover:bg-muted/30"
               >
                 <Search className="h-5 w-5" />
               </Button>
@@ -123,14 +63,14 @@ const CompactSidebarNav: React.FC = () => {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        
+
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="w-12 h-12 rounded-full hover:bg-muted/30 flex justify-center"
+                className="w-12 h-12 rounded-full hover:bg-muted/30"
               >
                 <Settings className="h-5 w-5" />
               </Button>
@@ -142,7 +82,7 @@ const CompactSidebarNav: React.FC = () => {
         </TooltipProvider>
       </div>
       
-      <div className="mt-auto px-3">
+      <div className="mt-auto">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -158,12 +98,7 @@ const CompactSidebarNav: React.FC = () => {
               </Button>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <div className="text-center">
-                <p>{currentUser?.username}</p>
-                <p className="text-xs text-muted-foreground">
-                  {currentUser?.harmonyPoints} Harmony Points
-                </p>
-              </div>
+              <p>{currentUser?.username}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

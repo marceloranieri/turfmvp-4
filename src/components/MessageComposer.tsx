@@ -1,18 +1,17 @@
 
 import React, { useState } from 'react';
 import { useTurf } from '@/contexts/TurfContext';
-import { Plus, Send, Smile, Gift, Link2, AtSign } from 'lucide-react';
+import { Smile, Send, Paperclip, Link2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 const MessageComposer: React.FC = () => {
-  const { sendMessage, currentUser, currentTopic } = useTurf();
+  const { sendMessage, currentTopic } = useTurf();
   const [message, setMessage] = useState('');
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (message.trim()) {
       sendMessage(message);
       setMessage('');
@@ -20,51 +19,23 @@ const MessageComposer: React.FC = () => {
   };
   
   return (
-    <div className="border-t border-border p-3 bg-card">
+    <div className="border-t border-border p-4 bg-background">
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button 
-                type="button"
-                variant="ghost" 
-                size="icon" 
-                className="rounded-full shrink-0"
-              >
-                <Plus className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="top">
-              <p>Upload file</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        
-        <div className="flex-1 relative">
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder={`Message the debate${currentTopic ? `: ${currentTopic.title}` : '...'}`}
-            className="w-full px-4 py-2.5 rounded-md bg-muted border-0 text-foreground focus:ring-0 focus:outline-none"
-          />
-        </div>
-        
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button 
                   type="button" 
                   variant="ghost" 
-                  size="icon" 
-                  className="rounded-full shrink-0"
+                  size="icon"
+                  className="rounded-full"
                 >
-                  <AtSign className="h-5 w-5" />
+                  <Paperclip className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="top">
-                <p>Mention user</p>
+              <TooltipContent>
+                <p>Attach file</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -75,50 +46,42 @@ const MessageComposer: React.FC = () => {
                 <Button 
                   type="button" 
                   variant="ghost" 
-                  size="icon" 
-                  className="rounded-full shrink-0"
-                >
-                  <Smile className="h-5 w-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="top">
-                <p>Add emoji</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  type="button" 
-                  variant="ghost" 
-                  size="icon" 
-                  className="rounded-full shrink-0"
-                >
-                  <Gift className="h-5 w-5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="top">
-                <p>Add GIF</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  type="button" 
-                  variant="ghost" 
-                  size="icon" 
-                  className="rounded-full shrink-0"
+                  size="icon"
+                  className="rounded-full"
                 >
                   <Link2 className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="top">
+              <TooltipContent>
                 <p>Link to message</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder={`Message ${currentTopic ? currentTopic.title : 'the chat'}...`}
+          className="flex-1 bg-background border-0 focus:ring-0 text-sm rounded-md px-4 py-2.5 placeholder:text-muted-foreground"
+        />
+        
+        <div className="flex items-center gap-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  size="icon"
+                  className="rounded-full"
+                >
+                  <Smile className="h-5 w-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Add emoji</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -129,9 +92,9 @@ const MessageComposer: React.FC = () => {
                 <Button 
                   type="submit" 
                   variant="ghost" 
-                  size="icon" 
+                  size="icon"
                   className={cn(
-                    "rounded-full shrink-0",
+                    "rounded-full",
                     message.trim() ? "text-primary" : "text-muted-foreground"
                   )}
                   disabled={!message.trim()}
@@ -139,7 +102,7 @@ const MessageComposer: React.FC = () => {
                   <Send className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="top">
+              <TooltipContent>
                 <p>Send message</p>
               </TooltipContent>
             </Tooltip>
