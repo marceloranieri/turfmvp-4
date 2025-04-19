@@ -27,7 +27,7 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({ title, message, retr
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
-  fallback?: React.ReactNode;
+  fallback?: React.ReactNode | ((error: Error, resetError: () => void) => React.ReactNode);
 }
 
 export const SupabaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({ 
@@ -51,8 +51,8 @@ export const SupabaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({
   if (error) {
     return (
       typeof fallback === 'function' 
-      ? fallback(error, () => setError(null)) 
-      : fallback
+        ? fallback(error, () => setError(null))
+        : fallback
     );
   }
   

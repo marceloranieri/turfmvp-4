@@ -17,9 +17,11 @@ export const useSubscription = (
   const channelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
+    // Using the correct API for Supabase channel subscriptions
     const channel = supabase
       .channel(channelName)
-      .on('postgres_changes',
+      .on(
+        'postgres_changes',
         { 
           event, 
           schema: 'public', 

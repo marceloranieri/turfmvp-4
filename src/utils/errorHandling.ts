@@ -99,14 +99,3 @@ export const withErrorHandling = async <T>(
     throw error;
   }
 };
-
-// Example usage:
-// const sendMessage = async (content: string) => {
-//   return withErrorHandling(
-//     () => supabase.from('messages').insert({ content }).single(),
-//     {
-//       title: 'Failed to send message',
-//       message: 'Your message could not be sent. Please try again.'
-//     }
-//   );
-// };

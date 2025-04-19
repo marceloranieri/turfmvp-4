@@ -2,6 +2,8 @@
 import { useReducer, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Message, Reaction } from '@/types/turf';
+import { useSubscription } from './useSubscription';
+import { withErrorHandling } from '@/utils/errorHandling';
 
 // Define state and action types
 interface MessageState {
@@ -94,29 +96,38 @@ const messageReducer = (state: MessageState, action: MessageAction): MessageStat
 export const useChat = (topicId?: string) => {
   const [state, dispatch] = useReducer(messageReducer, initialState);
   
-  // Fetch initial messages
+  // Fetch initial messages - using mock data since we don't have the messages table yet in Supabase
   useEffect(() => {
     const fetchMessages = async () => {
       dispatch({ type: 'LOADING' });
       try {
-        let query = supabase
-          .from('messages')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(100);
+        // Using mock data since the Supabase schema doesn't include messages table yet
+        // In a real implementation, this would fetch from Supabase
+        setTimeout(() => {
+          const mockMessages: Message[] = [
+            {
+              id: '1',
+              userId: 'user-1',
+              username: 'User One',
+              avatarUrl: '',
+              content: 'Hello, this is a mock message',
+              createdAt: new Date().toISOString(),
+              parentId: null,
+              linkTo: null,
+              upvotes: 0,
+              downvotes: 0,
+              brainAwards: 0,
+              reactions: [],
+              isAi: false,
+              tags: []
+            }
+          ];
           
-        if (topicId) {
-          query = query.eq('topic_id', topicId);
-        }
-        
-        const { data, error } = await query;
-        
-        if (error) throw error;
-        
-        dispatch({ 
-          type: 'LOADED_MESSAGES', 
-          payload: data as Message[] 
-        });
+          dispatch({ 
+            type: 'LOADED_MESSAGES', 
+            payload: mockMessages 
+          });
+        }, 500);
       } catch (error) {
         console.error('Error fetching messages:', error);
         dispatch({ 
@@ -129,101 +140,99 @@ export const useChat = (topicId?: string) => {
     fetchMessages();
   }, [topicId]);
   
-  // Subscribe to real-time message updates
-  useEffect(() => {
-    const messageChannel = supabase
-      .channel('public:messages')
-      .on('postgres_changes', 
-        { event: 'INSERT', schema: 'public', table: 'messages' },
-        (payload) => {
-          const newMessage = payload.new as Message;
-          if (!topicId || newMessage.topicId === topicId) {
-            dispatch({ type: 'ADD_MESSAGE', payload: newMessage });
-          }
-        }
-      )
-      .on('postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'messages' },
-        (payload) => {
-          const updatedMessage = payload.new as Message;
-          if (!topicId || updatedMessage.topicId === topicId) {
-            dispatch({ type: 'UPDATE_MESSAGE', payload: updatedMessage });
-          }
-        }
-      )
-      .subscribe();
-    
-    // Cleanup subscription when component unmounts
-    return () => {
-      console.log('Cleaning up message subscription');
-      supabase.removeChannel(messageChannel);
-    };
+  // Handler for new messages
+  const handleNewMessage = useCallback((payload: any) => {
+    const newMessage = payload.new as Message;
+    if (!topicId || newMessage.topicId === topicId) {
+      dispatch({ type: 'ADD_MESSAGE', payload: newMessage });
+    }
   }, [topicId]);
-  
-  // Subscribe to real-time reaction updates
-  useEffect(() => {
-    const reactionChannel = supabase
-      .channel('public:reactions')
-      .on('postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'message_reactions' },
-        (payload) => {
-          const newReaction = payload.new as any;
-          dispatch({ 
-            type: 'UPDATE_REACTION', 
-            payload: { 
-              messageId: newReaction.message_id, 
-              reaction: {
-                id: newReaction.id,
-                userId: newReaction.user_id,
-                username: newReaction.username,
-                type: newReaction.type,
-                value: newReaction.value
-              } 
-            } 
-          });
-        }
-      )
-      .on('postgres_changes',
-        { event: 'DELETE', schema: 'public', table: 'message_reactions' },
-        (payload) => {
-          const deletedReaction = payload.old as any;
-          dispatch({ 
-            type: 'REMOVE_REACTION', 
-            payload: { 
-              messageId: deletedReaction.message_id, 
-              reactionId: deletedReaction.id
-            } 
-          });
-        }
-      )
-      .subscribe();
-    
-    // Cleanup subscription when component unmounts
-    return () => {
-      console.log('Cleaning up reaction subscription');
-      supabase.removeChannel(reactionChannel);
-    };
+
+  // Handler for updated messages
+  const handleUpdatedMessage = useCallback((payload: any) => {
+    const updatedMessage = payload.new as Message;
+    if (!topicId || updatedMessage.topicId === topicId) {
+      dispatch({ type: 'UPDATE_MESSAGE', payload: updatedMessage });
+    }
+  }, [topicId]);
+
+  // Handler for new reactions
+  const handleNewReaction = useCallback((payload: any) => {
+    const newReaction = payload.new as any;
+    dispatch({ 
+      type: 'UPDATE_REACTION', 
+      payload: { 
+        messageId: newReaction.message_id, 
+        reaction: {
+          id: newReaction.id,
+          userId: newReaction.user_id,
+          username: newReaction.username || 'User',
+          type: newReaction.type,
+          value: newReaction.value
+        } 
+      } 
+    });
   }, []);
+
+  // Handler for deleted reactions
+  const handleDeletedReaction = useCallback((payload: any) => {
+    const deletedReaction = payload.old as any;
+    dispatch({ 
+      type: 'REMOVE_REACTION', 
+      payload: { 
+        messageId: deletedReaction.message_id, 
+        reactionId: deletedReaction.id
+      } 
+    });
+  }, []);
+
+  // Use our custom subscription hook for message inserts
+  useSubscription(
+    'public:messages:insert',
+    'messages',
+    'INSERT',
+    handleNewMessage
+  );
+
+  // Use our custom subscription hook for message updates
+  useSubscription(
+    'public:messages:update',
+    'messages',
+    'UPDATE',
+    handleUpdatedMessage
+  );
+
+  // Use our custom subscription hook for reaction inserts
+  useSubscription(
+    'public:reactions:insert',
+    'message_reactions',
+    'INSERT',
+    handleNewReaction
+  );
+
+  // Use our custom subscription hook for reaction deletes
+  useSubscription(
+    'public:reactions:delete',
+    'message_reactions',
+    'DELETE',
+    handleDeletedReaction
+  );
   
   // Send a new message
   const sendMessage = useCallback(async (content: string, parentId?: string, linkToId?: string) => {
     try {
-      const newMessage = {
+      const messageData = {
         user_id: 'current-user-id', // This would be replaced with the actual current user ID
         content,
-        parent_id: parentId,
-        link_to: linkToId,
-        topic_id: topicId
+        parent_id: parentId || null,
+        link_to: linkToId || null,
+        topic_id: topicId || null
       };
       
-      const { data, error } = await supabase
-        .from('messages')
-        .insert(newMessage)
-        .single();
-        
-      if (error) throw error;
+      // Since we don't have the actual messages table yet, we'll mock the response
+      console.log('Would send message:', messageData);
       
-      return data;
+      return { id: `mock-${Date.now()}`, ...messageData };
     } catch (error) {
       console.error('Error sending message:', error);
       throw error;
@@ -233,21 +242,17 @@ export const useChat = (topicId?: string) => {
   // Add a reaction to a message
   const addReaction = useCallback(async (messageId: string, type: string, value: string) => {
     try {
-      const newReaction = {
+      const reactionData = {
         message_id: messageId,
         user_id: 'current-user-id', // This would be replaced with the actual current user ID
         type,
         value
       };
       
-      const { data, error } = await supabase
-        .from('message_reactions')
-        .insert(newReaction)
-        .single();
-        
-      if (error) throw error;
+      // Since we don't have the actual message_reactions table yet, we'll mock the response
+      console.log('Would add reaction:', reactionData);
       
-      return data;
+      return { id: `mock-${Date.now()}`, ...reactionData };
     } catch (error) {
       console.error('Error adding reaction:', error);
       throw error;
@@ -257,14 +262,10 @@ export const useChat = (topicId?: string) => {
   // Remove a reaction from a message
   const removeReaction = useCallback(async (reactionId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('message_reactions')
-        .delete()
-        .match({ id: reactionId });
-        
-      if (error) throw error;
+      // Since we don't have the actual message_reactions table yet, we'll mock the response
+      console.log('Would remove reaction:', reactionId);
       
-      return data;
+      return { success: true };
     } catch (error) {
       console.error('Error removing reaction:', error);
       throw error;
