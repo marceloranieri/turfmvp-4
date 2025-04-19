@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTurf } from '@/contexts/TurfContext';
 import { Bell, Search, Settings, Home, Users, MessageSquare, Calendar, User } from 'lucide-react';
@@ -12,17 +11,7 @@ const CompactSidebarNav: React.FC = () => {
   
   return (
     <div className="h-full w-full flex flex-col items-center py-4 bg-sidebar">
-      {/* Turf logo */}
-      <div className="px-3 mb-6">
-        <div className="w-12 h-12 rounded-2xl bg-gold flex items-center justify-center text-2xl font-bold text-black">
-          T
-        </div>
-      </div>
-      
-      <div className="border-t border-sidebar-border w-3/4 my-1"></div>
-      
-      {/* Navigation icons */}
-      <div className="flex flex-col items-center gap-2 px-2 mt-4 flex-1">
+      <div className="flex flex-col items-center gap-2 px-2 mt-2 flex-1">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -153,7 +142,6 @@ const CompactSidebarNav: React.FC = () => {
         </TooltipProvider>
       </div>
       
-      {/* User profile */}
       <div className="mt-auto px-3">
         <TooltipProvider>
           <Tooltip>
