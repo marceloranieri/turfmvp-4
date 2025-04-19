@@ -18,26 +18,28 @@ export const useSubscription = (
 
   useEffect(() => {
     // Create a channel with the specific name
-    let channel = supabase.channel(channelName);
+    const channel = supabase.channel(channelName);
     
-    // Add the postgres_changes listener
-    channel = channel.on(
-      'postgres_changes',
-      { 
-        event, 
-        schema: 'public', 
-        table,
-        ...(filter || {}) 
-      },
-      handler
-    );
+    // Add the postgres_changes listener with proper configuration
+    const subscription = channel
+      .on(
+        'postgres_changes',
+        {
+          event: event,
+          schema: 'public',
+          table: table,
+          ...(filter || {})
+        },
+        (payload) => {
+          handler(payload);
+        }
+      )
+      .subscribe();
     
-    // Subscribe to the channel
-    channel.subscribe();
-    
-    // Store the reference for cleanup
+    // Store the channel reference for cleanup
     channelRef.current = channel;
 
+    // Cleanup function to remove the channel on unmount
     return () => {
       console.log(`Cleaning up subscription to ${channelName}`);
       if (channelRef.current) {
