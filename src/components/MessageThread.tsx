@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { useTurf } from '@/contexts/TurfContext';
-import MessageCard from './MessageCard';
+import MessageCard from './message/MessageCard';
 
 const MessageThread: React.FC = () => {
   const { messages, pinnedMessageId } = useTurf();
