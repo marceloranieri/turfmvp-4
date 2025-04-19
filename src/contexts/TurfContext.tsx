@@ -6,7 +6,7 @@ import { MessagesProvider } from './MessagesContext';
 import { NotificationsProvider } from './NotificationsContext';
 import { TopicsProvider } from './TopicsContext';
 
-const TurfContext = createContext<TurfContextType | null>(null);
+const TurfContext = createContext<Partial<TurfContextType> | null>(null);
 
 export const TurfProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User>(MOCK_CURRENT_USER);
@@ -37,7 +37,7 @@ export const TurfProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <TurfContext.Provider value={baseContextValue as TurfContextType}>
+    <TurfContext.Provider value={baseContextValue}>
       <NotificationsProvider>
         <TopicsProvider>
           <MessagesProvider 

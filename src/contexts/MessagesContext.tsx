@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState } from 'react';
-import { Message, ReactionType, User } from '@/types/turf';
+import { Message, ReactionType, User, Notification } from '@/types/turf';
 import { useWizardAI } from '../hooks/useWizardAI';
 import { useNotifications } from './NotificationsContext';
 
@@ -95,11 +95,11 @@ export function MessagesProvider({
     if (linkToId) {
       const linkedMessage = messages.find(m => m.id === linkToId);
       if (linkedMessage && linkedMessage.upvotes > 0) {
-        const notification = {
+        const notification: Notification = {
           id: `notif-${Date.now()}`,
           userId: linkedMessage.userId,
           messageId: newMessage.id,
-          type: "mention",
+          type: "mention", // Now using the literal string from the union type
           content: `${currentUser.username} linked to your message, earning you harmony points!`,
           isRead: false,
           createdAt: new Date().toISOString()
@@ -131,11 +131,11 @@ export function MessagesProvider({
       
       const targetMessage = messages.find(m => m.id === messageId);
       if (targetMessage && targetMessage.userId !== currentUser.id) {
-        const notification = {
+        const notification: Notification = {
           id: `notif-${Date.now()}`,
           userId: targetMessage.userId,
           messageId,
-          type: "reaction",
+          type: "reaction", // Now using the literal string from the union type
           content: `${currentUser.username} reacted to your message with ${value}`,
           isRead: false,
           createdAt: new Date().toISOString()
@@ -167,11 +167,11 @@ export function MessagesProvider({
       
       const targetMessage = messages.find(m => m.id === messageId);
       if (targetMessage && targetMessage.userId !== currentUser.id) {
-        const notification = {
+        const notification: Notification = {
           id: `notif-${Date.now()}`,
           userId: targetMessage.userId,
           messageId,
-          type: "reaction",
+          type: "reaction", // Now using the literal string from the union type
           content: `${currentUser.username} upvoted your message (+1 harmony point)`,
           isRead: false,
           createdAt: new Date().toISOString()
@@ -205,11 +205,11 @@ export function MessagesProvider({
       
       const targetMessage = messages.find(m => m.id === messageId);
       if (targetMessage) {
-        const notification = {
+        const notification: Notification = {
           id: `notif-${Date.now()}`,
           userId: targetMessage.userId,
           messageId,
-          type: "award",
+          type: "award", // Now using the literal string from the union type
           content: `${currentUser.username} awarded your message a Brain! 🧠`,
           isRead: false,
           createdAt: new Date().toISOString()
