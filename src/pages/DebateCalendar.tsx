@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from 'lucide-react';
+import TopicModal from '@/components/TopicModal';
 
 interface DebateTopic {
   id: number;
@@ -19,6 +20,7 @@ interface DebateTopic {
 const DebateCalendar = () => {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(new Date());
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const { data: debateTopics, isLoading } = useQuery({
     queryKey: ['debateTopics'],
@@ -43,6 +45,15 @@ const DebateCalendar = () => {
     );
   };
 
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+    if (date && debateTopics?.some(topic => 
+      format(new Date(topic.debate_date), 'yyyy-MM-dd') === format(date, 'yyyy-MM-dd')
+    )) {
+      setIsModalOpen(true);
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-background p-8">
       <Card className="w-full max-w-4xl mx-auto">
@@ -59,42 +70,33 @@ const DebateCalendar = () => {
             <CardTitle>Debate Calendar</CardTitle>
           </div>
         </CardHeader>
-        <CardContent className="flex flex-col md:flex-row gap-8">
-          <div className="flex-1">
+        <CardContent>
+          <div className="flex justify-center">
             <Calendar
               mode="single"
               selected={selectedDate}
-              onSelect={setSelectedDate}
-              className="p-3"
+              onSelect={handleDateSelect}
+              className="rounded-md border"
               modifiers={{ hasDebate }}
               modifiersStyles={{
                 hasDebate: {
-                  backgroundColor: 'rgba(var(--primary), 0.1)',
-                  borderRadius: '50%'
+                  fontWeight: 'bold',
+                  backgroundColor: 'hsl(var(--primary) / 0.1)',
+                  color: 'hsl(var(--primary))'
                 }
               }}
             />
           </div>
-          <div className="flex-1">
-            {selectedDateTopic ? (
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">{format(new Date(selectedDateTopic.debate_date), 'MMMM d, yyyy')}</h3>
-                <div className="space-y-2">
-                  <div className="text-sm text-muted-foreground">{selectedDateTopic.theme}</div>
-                  <p className="text-base">{selectedDateTopic.topic_text}</p>
-                </div>
-              </div>
-            ) : (
-              <div className="text-muted-foreground">
-                {isLoading ? "Loading..." : "No debate scheduled for this date"}
-              </div>
-            )}
-          </div>
         </CardContent>
       </Card>
+
+      <TopicModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        topic={selectedDateTopic}
+      />
     </div>
   );
 };
 
 export default DebateCalendar;
-

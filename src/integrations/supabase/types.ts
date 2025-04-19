@@ -11,21 +11,18 @@ export type Database = {
     Tables: {
       debate_topics: {
         Row: {
-          created_at: string
           debate_date: string
           id: number
           theme: string
           topic_text: string
         }
         Insert: {
-          created_at?: string
           debate_date: string
-          id?: number
+          id: number
           theme: string
           topic_text: string
         }
         Update: {
-          created_at?: string
           debate_date?: string
           id?: number
           theme?: string
