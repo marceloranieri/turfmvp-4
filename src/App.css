@@ -1,50 +1,42 @@
-
-body {
-  background-color: #000000;
-  color: #FFFFFF;
-  font-family: Arial, sans-serif;
-}
-
 #root {
-  min-height: 100vh;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
 }
 
-/* Remove all rounded corners */
-* {
-  border-radius: 0 !important;
-  box-shadow: none !important;
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-/* Remove hover effects */
-button:hover, a:hover {
-  background: none;
-  color: #FFFFFF;
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Adjust typography for minimalist style */
-h1, .chat-header {
-  font-size: 24px;
-  font-weight: bold;
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
 }
 
-p, .message {
-  font-size: 16px;
-  font-weight: normal;
+.card {
+  padding: 2em;
 }
 
-/* Tighten spacing */
-.container {
-  padding: 10px;
-}
-
-.message {
-  margin-bottom: 10px;
-}
-
-ul {
-  margin: 10px 0;
-}
-
-li {
-  margin-bottom: 5px;
+.read-the-docs {
+  color: #888;
 }

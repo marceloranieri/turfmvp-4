@@ -7,7 +7,7 @@ const MessageThread: React.FC = () => {
   const { messages, pinnedMessageId } = useTurf();
   
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="flex-1 overflow-y-auto px-0 py-2">
       <div className="flex flex-col">
         {messages.map(message => (
           <MessageCard 

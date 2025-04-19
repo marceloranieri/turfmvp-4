@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useTurf } from '@/contexts/TurfContext';
+import { Pin } from 'lucide-react';
 
 const PinnedHighlightBanner: React.FC = () => {
   const { pinnedMessageId, messages } = useTurf();
@@ -34,19 +35,23 @@ const PinnedHighlightBanner: React.FC = () => {
   if (!pinnedMessage) return null;
   
   return (
-    <div className="border-b border-gold">
-      <div className="px-4 py-3">
-        <div className="text-xs text-gold mb-1">
-          PINNED MESSAGE · {timeLeft}s
-        </div>
-        <div className="text-sm">
-          <span className="font-medium mr-1">{pinnedMessage.username}:</span>
-          {pinnedMessage.content}
+    <div className="bg-gold/10 border-b border-gold/40 animate-slide-in overflow-hidden">
+      <div className="px-4 py-2 flex items-center">
+        <Pin className="h-4 w-4 text-gold mr-2 shrink-0" />
+        
+        <div className="flex-1 min-w-0">
+          <div className="text-xs text-gold/80 font-medium">
+            PINNED MESSAGE · {timeLeft}s
+          </div>
+          <div className="text-sm truncate">
+            <span className="font-medium mr-1">{pinnedMessage.username}:</span>
+            {pinnedMessage.content}
+          </div>
         </div>
       </div>
       
       {/* Timer bar */}
-      <div className="h-0.5 bg-secondary">
+      <div className="h-0.5 bg-gold/30">
         <div className="h-full bg-gold animate-countdown" />
       </div>
     </div>
