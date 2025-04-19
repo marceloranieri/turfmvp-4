@@ -15,7 +15,7 @@ const MessageThread: React.FC = () => {
   
   return (
     <div className="flex-1 overflow-y-auto px-0 py-2">
-      <PinnedHighlightBanner />
+      {/* PinnedHighlightBanner is rendered elsewhere in the layout */}
       <div className="flex flex-col max-w-3xl mx-auto">
         {messages.map(message => (
           <MessageCard 
