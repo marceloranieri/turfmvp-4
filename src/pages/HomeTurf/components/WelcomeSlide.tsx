@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 
 interface WelcomeSlideProps {
   onGetStarted: () => void;
@@ -8,16 +9,23 @@ interface WelcomeSlideProps {
 
 const WelcomeSlide: React.FC<WelcomeSlideProps> = ({ onGetStarted }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center">
-      <h1 className="text-4xl font-bold mb-6">Join the Daily Debate!</h1>
-      <p className="text-lg mb-10 max-w-md">
-        Engage in structured debates, earn Harmony Points, and become a Debate Maestro.
-      </p>
+    <div className="flex flex-col items-center justify-center h-full text-center space-y-8">
+      <div className="space-y-4">
+        <h1 className="text-4xl font-bold bg-gradient-to-br from-white via-white/90 to-white/70 bg-clip-text text-transparent">
+          Welcome to Turf
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-md mx-auto">
+          Join daily debates, share your thoughts, and engage with a community of curious minds.
+        </p>
+      </div>
+      
       <Button 
         onClick={onGetStarted}
-        className="bg-gold hover:bg-gold/90 text-black font-semibold px-8 py-6 text-lg transition-transform hover:scale-110"
+        size="lg"
+        className="bg-gold hover:bg-gold/90 text-background font-semibold px-8 py-6 text-lg gap-2 group"
       >
         Get Started
+        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
       </Button>
     </div>
   );

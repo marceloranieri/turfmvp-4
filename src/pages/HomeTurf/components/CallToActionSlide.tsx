@@ -15,11 +15,13 @@ const CallToActionSlide: React.FC<CallToActionSlideProps> = ({
 }) => {
   return (
     <div className="flex flex-col items-center justify-center h-full text-center">
-      <h2 className="text-3xl font-bold mb-6">Ready to join the debate?</h2>
+      <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
+        Ready to join the debate?
+      </h2>
       <div className="space-y-4 mb-4">
         <Button 
           onClick={onSignUp}
-          className="w-64 bg-gold hover:bg-gold/90 text-black font-semibold py-6 transition-transform hover:scale-110"
+          className="w-64 bg-gold hover:bg-gold/90 text-black font-semibold py-6 transition-transform hover:scale-105"
         >
           Sign Up
         </Button>
@@ -36,7 +38,7 @@ const CallToActionSlide: React.FC<CallToActionSlideProps> = ({
       <Button 
         onClick={onSkip}
         variant="ghost"
-        className="text-gray-400 hover:text-white mt-4"
+        className="text-muted-foreground hover:text-white mt-4"
       >
         Skip for now
       </Button>
