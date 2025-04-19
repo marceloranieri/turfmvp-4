@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { useTurf } from '@/contexts/TurfContext';
-import { Home, Bell, Search, Calendar } from 'lucide-react';
+import { Home, Bell, Search, Settings, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
