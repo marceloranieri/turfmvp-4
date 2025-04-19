@@ -134,7 +134,7 @@ const MessageActions: React.FC<MessageActionsProps> = ({
       >
         <BrainCircuit className="h-4 w-4" />
         <span className="text-xs ml-1">
-          Award Brain ({brainAwardsLeft} left)
+          Give award ({brainAwardsLeft} left)
         </span>
       </Button>
     </div>
