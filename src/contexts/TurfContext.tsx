@@ -22,37 +22,40 @@ export const TurfProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
     <NotificationsProvider>
       <TopicsProvider>
-        <TurfContext.Provider value={{
-          currentUser,
-          darkMode,
-          toggleDarkMode
-        } as TurfContextType}>
-          <MessagesProvider 
-            currentUser={currentUser}
-            onNotification={(notification) => {
-              const notificationsContext = useNotifications();
+        <MessagesProvider 
+          currentUser={currentUser}
+          onNotification={(notification) => {
+            // We'll access notifications context differently
+            const notificationsContext = useNotifications();
+            if (notificationsContext) {
               notificationsContext.addNotification(notification);
-              
-              if (notification.type === 'mention' && notification.userId === currentUser.id) {
-                setCurrentUser(prev => ({
-                  ...prev,
-                  harmonyPoints: prev.harmonyPoints + 1
-                }));
-              }
-              
-              if (notification.type === 'award' && notification.userId === currentUser.id) {
-                setCurrentUser(prev => ({
-                  ...prev,
-                  brainAwardsReceived: prev.brainAwardsReceived + 1
-                }));
-              }
-            }}
-          >
+            }
+            
+            if (notification.type === 'mention' && notification.userId === currentUser.id) {
+              setCurrentUser(prev => ({
+                ...prev,
+                harmonyPoints: prev.harmonyPoints + 1
+              }));
+            }
+            
+            if (notification.type === 'award' && notification.userId === currentUser.id) {
+              setCurrentUser(prev => ({
+                ...prev,
+                brainAwardsReceived: prev.brainAwardsReceived + 1
+              }));
+            }
+          }}
+        >
+          <TurfContext.Provider value={{
+            currentUser,
+            darkMode,
+            toggleDarkMode
+          } as TurfContextType}>
             <TurfConsumer>
               {children}
             </TurfConsumer>
-          </MessagesProvider>
-        </TurfContext.Provider>
+          </TurfContext.Provider>
+        </MessagesProvider>
       </TopicsProvider>
     </NotificationsProvider>
   );
