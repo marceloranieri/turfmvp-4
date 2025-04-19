@@ -1,14 +1,14 @@
-
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTurf } from '@/contexts/TurfContext';
 import { Home, Bell, Search, Settings, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const CompactSidebarNav: React.FC = () => {
   const { currentUser } = useTurf();
+  const navigate = useNavigate();
   
   return (
     <div className="h-full w-[72px] flex flex-col items-center py-4 bg-sidebar border-r border-border">
@@ -90,12 +90,13 @@ const CompactSidebarNav: React.FC = () => {
                 variant="ghost" 
                 size="icon" 
                 className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full hover:bg-muted/30" 
+                onClick={() => navigate('/calendar')}
               >
                 <Calendar className="h-5 w-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <p>Calendar</p>
+              <p>Debate Calendar</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

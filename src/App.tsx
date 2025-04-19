@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +9,7 @@ import HomeTurf from "./pages/HomeTurf";
 import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
+import DebateCalendar from "./pages/DebateCalendar";
 import { TurfProvider } from "./contexts/TurfContext";
 
 const queryClient = new QueryClient();
@@ -28,7 +28,7 @@ const App = () => (
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/settings" element={<SettingsPage />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="/calendar" element={<DebateCalendar />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
