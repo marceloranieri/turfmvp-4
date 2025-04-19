@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Message, ReactionType, User } from '@/types/turf';
 import { useWizardAI } from '../hooks/useWizardAI';
+import { useNotifications } from './NotificationsContext';
 
 interface MessagesContextType {
   messages: Message[];
@@ -16,13 +17,21 @@ interface MessagesContextType {
 
 const MessagesContext = createContext<MessagesContextType | null>(null);
 
-export const MessagesProvider: React.FC<{ 
+// Expose the context for direct access
+MessagesProvider.context = MessagesContext;
+
+export function MessagesProvider({ 
+  children,
+  currentUser,
+  onNotification
+}: { 
   children: React.ReactNode;
   currentUser: User;
   onNotification: (notification: any) => void;
-}> = ({ children, currentUser, onNotification }) => {
+}) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [pinnedMessageId, setPinnedMessageId] = useState<string | null>(null);
+  const notificationsContext = useNotifications();
 
   const { checkForLull } = useWizardAI(
     messages,
@@ -86,7 +95,7 @@ export const MessagesProvider: React.FC<{
     if (linkToId) {
       const linkedMessage = messages.find(m => m.id === linkToId);
       if (linkedMessage && linkedMessage.upvotes > 0) {
-        onNotification({
+        const notification = {
           id: `notif-${Date.now()}`,
           userId: linkedMessage.userId,
           messageId: newMessage.id,
@@ -94,7 +103,10 @@ export const MessagesProvider: React.FC<{
           content: `${currentUser.username} linked to your message, earning you harmony points!`,
           isRead: false,
           createdAt: new Date().toISOString()
-        });
+        };
+        
+        notificationsContext.addNotification(notification);
+        onNotification(notification);
       }
     }
   };
@@ -119,7 +131,7 @@ export const MessagesProvider: React.FC<{
       
       const targetMessage = messages.find(m => m.id === messageId);
       if (targetMessage && targetMessage.userId !== currentUser.id) {
-        onNotification({
+        const notification = {
           id: `notif-${Date.now()}`,
           userId: targetMessage.userId,
           messageId,
@@ -127,7 +139,10 @@ export const MessagesProvider: React.FC<{
           content: `${currentUser.username} reacted to your message with ${value}`,
           isRead: false,
           createdAt: new Date().toISOString()
-        });
+        };
+        
+        notificationsContext.addNotification(notification);
+        onNotification(notification);
       }
     },
 
@@ -152,7 +167,7 @@ export const MessagesProvider: React.FC<{
       
       const targetMessage = messages.find(m => m.id === messageId);
       if (targetMessage && targetMessage.userId !== currentUser.id) {
-        onNotification({
+        const notification = {
           id: `notif-${Date.now()}`,
           userId: targetMessage.userId,
           messageId,
@@ -160,7 +175,10 @@ export const MessagesProvider: React.FC<{
           content: `${currentUser.username} upvoted your message (+1 harmony point)`,
           isRead: false,
           createdAt: new Date().toISOString()
-        });
+        };
+        
+        notificationsContext.addNotification(notification);
+        onNotification(notification);
       }
     },
 
@@ -187,7 +205,7 @@ export const MessagesProvider: React.FC<{
       
       const targetMessage = messages.find(m => m.id === messageId);
       if (targetMessage) {
-        onNotification({
+        const notification = {
           id: `notif-${Date.now()}`,
           userId: targetMessage.userId,
           messageId,
@@ -195,7 +213,10 @@ export const MessagesProvider: React.FC<{
           content: `${currentUser.username} awarded your message a Brain! 🧠`,
           isRead: false,
           createdAt: new Date().toISOString()
-        });
+        };
+        
+        notificationsContext.addNotification(notification);
+        onNotification(notification);
       }
     }
   };
@@ -210,7 +231,7 @@ export const MessagesProvider: React.FC<{
       {children}
     </MessagesContext.Provider>
   );
-};
+}
 
 export const useMessages = () => {
   const context = useContext(MessagesContext);

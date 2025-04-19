@@ -9,7 +9,10 @@ interface TopicsContextType {
 
 const TopicsContext = createContext<TopicsContextType | null>(null);
 
-export const TopicsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+// Expose the context for direct access
+TopicsProvider.context = TopicsContext;
+
+export function TopicsProvider({ children }: { children: React.ReactNode }) {
   const [currentTopic] = useState<DebateTopic>(INITIAL_TOPIC);
 
   return (
@@ -17,7 +20,7 @@ export const TopicsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       {children}
     </TopicsContext.Provider>
   );
-};
+}
 
 export const useTopics = () => {
   const context = useContext(TopicsContext);

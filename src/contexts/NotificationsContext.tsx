@@ -11,7 +11,10 @@ interface NotificationsContextType {
 
 const NotificationsContext = createContext<NotificationsContextType | null>(null);
 
-export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+// Expose the context for direct access
+NotificationsProvider.context = NotificationsContext;
+
+export function NotificationsProvider({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const unreadNotificationsCount = notifications.filter(n => !n.isRead).length;
@@ -36,7 +39,7 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
     </NotificationsContext.Provider>
   );
-};
+}
 
 export const useNotifications = () => {
   const context = useContext(NotificationsContext);

@@ -5,9 +5,6 @@ import { MOCK_CURRENT_USER } from '../constants/turf';
 import { MessagesProvider } from './MessagesContext';
 import { NotificationsProvider } from './NotificationsContext';
 import { TopicsProvider } from './TopicsContext';
-import { useMessages } from './MessagesContext';
-import { useNotifications } from './NotificationsContext';
-import { useTopics } from './TopicsContext';
 
 const TurfContext = createContext<TurfContextType | null>(null);
 
@@ -19,73 +16,70 @@ export const TurfProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setDarkMode(prev => !prev);
   };
 
-  return (
-    <NotificationsProvider>
-      <TopicsProvider>
-        <MessagesProvider 
-          currentUser={currentUser}
-          onNotification={(notification) => {
-            // We'll access notifications context differently
-            const notificationsContext = useNotifications();
-            if (notificationsContext) {
-              notificationsContext.addNotification(notification);
-            }
-            
-            if (notification.type === 'mention' && notification.userId === currentUser.id) {
-              setCurrentUser(prev => ({
-                ...prev,
-                harmonyPoints: prev.harmonyPoints + 1
-              }));
-            }
-            
-            if (notification.type === 'award' && notification.userId === currentUser.id) {
-              setCurrentUser(prev => ({
-                ...prev,
-                brainAwardsReceived: prev.brainAwardsReceived + 1
-              }));
-            }
-          }}
-        >
-          <TurfContext.Provider value={{
-            currentUser,
-            darkMode,
-            toggleDarkMode
-          } as TurfContextType}>
-            <TurfConsumer>
-              {children}
-            </TurfConsumer>
-          </TurfContext.Provider>
-        </MessagesProvider>
-      </TopicsProvider>
-    </NotificationsProvider>
-  );
-};
-
-// TurfConsumer combines all context values
-const TurfConsumer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const messagesContext = useMessages();
-  const notificationsContext = useNotifications();
-  const topicsContext = useTopics();
-  const turfContext = useTurf();
-
-  const combinedContext: TurfContextType = {
-    ...turfContext,
-    ...messagesContext,
-    ...notificationsContext,
-    ...topicsContext
+  // Store base context values here
+  const baseContextValue = {
+    currentUser,
+    darkMode,
+    toggleDarkMode,
+    // Include update functions for the currentUser
+    updateHarmonyPoints: (points: number) => {
+      setCurrentUser(prev => ({
+        ...prev,
+        harmonyPoints: prev.harmonyPoints + points
+      }));
+    },
+    updateBrainAwards: () => {
+      setCurrentUser(prev => ({
+        ...prev,
+        brainAwardsReceived: prev.brainAwardsReceived + 1
+      }));
+    }
   };
 
   return (
-    <TurfContext.Provider value={combinedContext}>
-      {children}
+    <TurfContext.Provider value={baseContextValue as TurfContextType}>
+      <NotificationsProvider>
+        <TopicsProvider>
+          <MessagesProvider 
+            currentUser={currentUser}
+            onNotification={(notification) => {
+              if (notification.type === 'mention' && notification.userId === currentUser.id) {
+                setCurrentUser(prev => ({
+                  ...prev,
+                  harmonyPoints: prev.harmonyPoints + 1
+                }));
+              }
+              
+              if (notification.type === 'award' && notification.userId === currentUser.id) {
+                setCurrentUser(prev => ({
+                  ...prev,
+                  brainAwardsReceived: prev.brainAwardsReceived + 1
+                }));
+              }
+            }}
+          >
+            {children}
+          </MessagesProvider>
+        </TopicsProvider>
+      </NotificationsProvider>
     </TurfContext.Provider>
   );
 };
 
 export const useTurf = () => {
-  const context = useContext(TurfContext);
-  if (!context) {
-    throw new Error("useTurf must be used within a TurfProvider");
+  const turfContext = useContext(TurfContext);
+  const notificationsContext = useContext(NotificationsProvider.context);
+  const topicsContext = useContext(TopicsProvider.context);
+  const messagesContext = useContext(MessagesProvider.context);
+
+  if (!turfContext || !notificationsContext || !topicsContext || !messagesContext) {
+    throw new Error("useTurf must be used within TurfProvider");
   }
-  return context;
+
+  return {
+    ...turfContext,
+    ...notificationsContext,
+    ...topicsContext,
+    ...messagesContext
+  };
 };
