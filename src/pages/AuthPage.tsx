@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Apple, Mail, Eye, EyeOff, LogIn, UserPlus, ChevronLeft, AlertCircle } from 'lucide-react';
-import { FcGoogle } from 'react-icons/fc';
 import { useTurf } from '@/contexts/TurfContext';
 
 type AuthMode = 'signin' | 'signup';
