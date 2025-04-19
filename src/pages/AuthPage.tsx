@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -20,7 +19,6 @@ const AuthPage: React.FC = () => {
   const [error, setError] = useState('');
   const { currentUser } = useTurf();
   
-  // Redirect if already logged in
   useEffect(() => {
     if (currentUser) {
       navigate('/');
@@ -31,7 +29,6 @@ const AuthPage: React.FC = () => {
     e.preventDefault();
     setError('');
     
-    // Basic validation
     if (!email || !password) {
       setError('Please enter both email and password');
       return;
@@ -42,10 +39,7 @@ const AuthPage: React.FC = () => {
       return;
     }
     
-    // In a real app, this would connect to Supabase Auth
-    // For now, let's simulate auth with a timeout
     setTimeout(() => {
-      // For demo purposes, just redirect to home
       navigate('/');
     }, 1000);
   };
@@ -87,7 +81,12 @@ const AuthPage: React.FC = () => {
                 className="w-full justify-start py-5"
                 onClick={() => setError("Google sign in would connect to Supabase Auth")}
               >
-                <FcGoogle className="mr-2 h-5 w-5" />
+                <svg viewBox="0 0 48 48" className="mr-2 h-5 w-5">
+                  <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
+                  <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.32-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
+                  <path fill="#FBBC05" d="M11.68 28.18c-.89-2.64-.89-5.52 0-8.16V14.32H4.34A23.934 23.934 0 0 0 0 24c0 3.84.93 7.46 2.56 10.68l7.12-5.5z"/>
+                  <path fill="#EA4335" d="M24 9.5c3.25 0 6.18 1.18 8.48 3.48L38.4 6.6A24 24 0 0 0 4.34 14.32l7.34 5.7C16.42 13.37 21.27 9.5 24 9.5z"/>
+                </svg>
                 Continue with Google
               </Button>
               
