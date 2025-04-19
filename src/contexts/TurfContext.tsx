@@ -6,6 +6,7 @@ import { MessagesProvider } from './MessagesContext';
 import { NotificationsProvider } from './NotificationsContext';
 import { TopicsProvider } from './TopicsContext';
 
+// Create the context with proper Partial<TurfContextType> typing
 const TurfContext = createContext<Partial<TurfContextType>>({});
 
 export const TurfProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -16,12 +17,12 @@ export const TurfProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setDarkMode(prev => !prev);
   };
 
-  // Store base context values here
+  // Store base context values here - these properties must match TurfContextType
   const baseContextValue: Partial<TurfContextType> = {
     currentUser,
     darkMode,
     toggleDarkMode,
-    // Include update functions for the currentUser
+    // These methods need to be defined in TurfContextType
     updateHarmonyPoints: (points: number) => {
       setCurrentUser(prev => ({
         ...prev,

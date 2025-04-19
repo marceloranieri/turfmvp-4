@@ -79,4 +79,8 @@ export interface TurfContextType {
   downvoteMessage: (messageId: string) => void;
   markNotificationsAsRead: () => void;
   toggleDarkMode: () => void;
+  
+  // Add these methods to match what's being used in TurfContext.tsx
+  updateHarmonyPoints: (points: number) => void;
+  updateBrainAwards: () => void;
 }
