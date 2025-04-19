@@ -87,7 +87,7 @@ const CompactSidebarNav: React.FC = () => {
             <TooltipTrigger asChild>
               <Button 
                 variant="ghost" 
-                size="icon"
+                size="icon" 
                 className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full hover:bg-muted/30" 
               >
                 <Calendar className="h-5 w-5" />
@@ -95,23 +95,6 @@ const CompactSidebarNav: React.FC = () => {
             </TooltipTrigger>
             <TooltipContent side="right">
               <p>Calendar</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon"
-                className="absolute bottom-10 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full hover:bg-muted/30" 
-              >
-                <Settings className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right">
-              <p>Settings</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
