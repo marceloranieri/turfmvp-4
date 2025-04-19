@@ -59,12 +59,24 @@ const MessageActions: React.FC<MessageActionsProps> = ({
         showActions ? 'opacity-100' : 'opacity-0'
       } group-hover:opacity-100 transition-opacity`}
     >
-      <Button variant="ghost" size="sm" className="h-7 px-2 text-muted-foreground" onClick={onUpvote}>
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        className="h-7 px-2 text-muted-foreground" 
+        onClick={onUpvote}
+        aria-label="Upvote"
+      >
         <ThumbsUp className="h-4 w-4 mr-1" />
         <span className="text-xs">{upvotes > 0 ? upvotes : ''}</span>
       </Button>
       
-      <Button variant="ghost" size="sm" className="h-7 px-2 text-muted-foreground" onClick={onDownvote}>
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        className="h-7 px-2 text-muted-foreground" 
+        onClick={onDownvote}
+        aria-label="Downvote"
+      >
         <ThumbsDown className="h-4 w-4 mr-1" />
         <span className="text-xs">{downvotes > 0 ? downvotes : ''}</span>
       </Button>
@@ -74,13 +86,19 @@ const MessageActions: React.FC<MessageActionsProps> = ({
         size="sm" 
         className="h-7 px-2 text-muted-foreground"
         onClick={onReplyClick}
+        aria-label="Reply"
       >
         <MessageSquare className="h-4 w-4" />
       </Button>
       
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-7 px-2 text-muted-foreground">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-7 px-2 text-muted-foreground"
+            aria-label="Add emoji"
+          >
             <Smile className="h-4 w-4" />
           </Button>
         </PopoverTrigger>
@@ -91,6 +109,7 @@ const MessageActions: React.FC<MessageActionsProps> = ({
                 key={index}
                 className="text-lg hover:bg-muted p-1 rounded cursor-pointer"
                 onClick={() => onEmojiSelect(emoji)}
+                aria-label={`Emoji ${emoji}`}
               >
                 {emoji}
               </button>
@@ -101,7 +120,12 @@ const MessageActions: React.FC<MessageActionsProps> = ({
       
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-7 px-2 text-muted-foreground">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-7 px-2 text-muted-foreground"
+            aria-label="Add GIF"
+          >
             <Image className="h-4 w-4" />
           </Button>
         </PopoverTrigger>
@@ -131,6 +155,7 @@ const MessageActions: React.FC<MessageActionsProps> = ({
         }`}
         onClick={onBrainAward}
         disabled={!canAwardBrain}
+        aria-label="Give brain award"
       >
         <BrainCircuit className="h-4 w-4" />
         <span className="text-xs ml-1">

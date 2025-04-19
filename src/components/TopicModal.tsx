@@ -1,7 +1,8 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { format } from "date-fns";
 import { Share2, CalendarPlus, ArrowLeft, ArrowRight } from "lucide-react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -18,9 +19,10 @@ interface TopicModalProps {
     topic_text: string;
     debate_date: string;
   } | null;
+  onDateChange?: (date: Date) => void;
 }
 
-const TopicModal = ({ isOpen, onClose, topic }: TopicModalProps) => {
+const TopicModal = ({ isOpen, onClose, topic, onDateChange }: TopicModalProps) => {
   if (!topic) return null;
 
   const { data: allTopics } = useQuery({
@@ -48,14 +50,23 @@ const TopicModal = ({ isOpen, onClose, topic }: TopicModalProps) => {
 
   const nextScheduledTopic = findNextScheduledTopic();
 
-  // Mock participants - in a real app, this would come from the database
-  const mockParticipants = [
-    { id: 1, name: 'AB' },
-    { id: 2, name: 'CD' },
-    { id: 3, name: 'EF' },
-    { id: 4, name: 'GH' },
-    { id: 5, name: 'IJ' },
-  ];
+  const handlePrevDate = () => {
+    if (prevTopic && onDateChange) {
+      onDateChange(new Date(prevTopic.debate_date));
+    }
+  };
+
+  const handleNextDate = () => {
+    if (nextTopic && onDateChange) {
+      onDateChange(new Date(nextTopic.debate_date));
+    }
+  };
+
+  const handleNextScheduled = () => {
+    if (nextScheduledTopic && onDateChange) {
+      onDateChange(new Date(nextScheduledTopic.debate_date));
+    }
+  };
 
   const handleAddToCalendar = () => {
     // In a real app, this would integrate with calendar APIs
@@ -70,9 +81,20 @@ const TopicModal = ({ isOpen, onClose, topic }: TopicModalProps) => {
   // Create hashtags from the theme
   const hashtags = topic.theme.toLowerCase().split(' & ').map(tag => tag.replace(/\s+/g, ''));
 
+  // Mock participants - in a real app, this would come from the database
+  const mockParticipants = [
+    { id: 1, name: 'AB' },
+    { id: 2, name: 'CD' },
+    { id: 3, name: 'EF' },
+    { id: 4, name: 'GH' },
+    { id: 5, name: 'IJ' },
+  ];
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px] p-0 gap-0 overflow-hidden">
+        <DialogTitle className="sr-only">Topic Details</DialogTitle>
+        
         {/* Header Image - Using a gradient as placeholder */}
         <div className="h-32 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600" />
 
@@ -83,8 +105,9 @@ const TopicModal = ({ isOpen, onClose, topic }: TopicModalProps) => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => prevTopic && setSelectedDate(new Date(prevTopic.debate_date))}
+              onClick={handlePrevDate}
               disabled={!prevTopic}
+              aria-label="Previous topic"
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
@@ -101,8 +124,9 @@ const TopicModal = ({ isOpen, onClose, topic }: TopicModalProps) => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => nextTopic && setSelectedDate(new Date(nextTopic.debate_date))}
+              onClick={handleNextDate}
               disabled={!nextTopic}
+              aria-label="Next topic"
             >
               <ArrowRight className="h-4 w-4" />
             </Button>
@@ -114,7 +138,7 @@ const TopicModal = ({ isOpen, onClose, topic }: TopicModalProps) => {
               <p className="text-muted-foreground mb-2">No topic scheduled for this date.</p>
               <Button
                 variant="link"
-                onClick={() => setSelectedDate(new Date(nextScheduledTopic.debate_date))}
+                onClick={handleNextScheduled}
                 className="text-primary"
               >
                 Next topic on {format(new Date(nextScheduledTopic.debate_date), 'MMMM d')} →

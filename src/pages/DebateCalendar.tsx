@@ -80,6 +80,10 @@ const DebateCalendar = () => {
     setIsModalOpen(true);
   };
 
+  const handleDateChange = (newDate: Date) => {
+    setSelectedDate(newDate);
+  };
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen bg-background p-8">
@@ -153,6 +157,7 @@ const DebateCalendar = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         topic={selectedDateTopic || null}
+        onDateChange={handleDateChange}
       />
     </div>
   );
