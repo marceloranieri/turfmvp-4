@@ -1,5 +1,5 @@
 
-import { DebatePhase } from '../types/turf';
+import { DebatePhase, Message } from '../types/turf';
 
 export const AI_NOTIFICATION_LINES = [
   "Wiz just tossed a thought grenade.",
@@ -39,3 +39,72 @@ export const AI_MESSAGES = [
   "Environmental impact is worth considering - less commuting means reduced carbon emissions, but what about increased home energy usage? [Source: https://example.com/remote-environment]",
   "Remote work could reshape urban centers. If knowledge workers leave cities, how might that affect local economies and housing markets? [Source: https://example.com/remote-urban-impact]"
 ];
+
+// Add the missing INITIAL_MESSAGES constant
+export const INITIAL_MESSAGES: Message[] = [
+  {
+    id: "msg-1",
+    userId: "user-2",
+    username: "DebateEnthusiast",
+    avatarUrl: "https://i.pravatar.cc/150?u=user-2",
+    content: "Remote work has dramatically improved my work-life balance. I save 2 hours commuting each day!",
+    parentId: undefined,
+    linkTo: undefined,
+    isAi: false,
+    createdAt: new Date(Date.now() - 35 * 60 * 1000).toISOString(),
+    reactions: [],
+    upvotes: 5,
+    downvotes: 1,
+    tags: ["Opening Argument"],
+    brainAwards: 1
+  },
+  {
+    id: "msg-2",
+    userId: "user-3",
+    username: "WorkplaceStrategist",
+    avatarUrl: "https://i.pravatar.cc/150?u=user-3",
+    content: "While remote work offers flexibility, I've noticed a decline in spontaneous collaboration that used to happen in the office.",
+    parentId: undefined,
+    linkTo: undefined,
+    isAi: false,
+    createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+    reactions: [],
+    upvotes: 3,
+    downvotes: 0,
+    tags: ["Opening Argument"],
+    brainAwards: 0
+  },
+  {
+    id: "msg-3",
+    userId: "user-4",
+    username: "FutureOfWork",
+    avatarUrl: "https://i.pravatar.cc/150?u=user-4",
+    content: "I think hybrid models will dominate. Companies won't abandon offices entirely, but flexibility will be key.",
+    parentId: undefined,
+    linkTo: undefined,
+    isAi: false,
+    createdAt: new Date(Date.now() - 25 * 60 * 1000).toISOString(),
+    reactions: [],
+    upvotes: 7,
+    downvotes: 2,
+    tags: ["Opening Argument"],
+    brainAwards: 2
+  },
+  {
+    id: "msg-4",
+    userId: "ai-wizard",
+    username: "Wizard of Mods",
+    avatarUrl: "/wizard.png",
+    content: "Research shows that remote workers are 13% more productive but report 50% more feelings of isolation. Have you experienced both sides of this coin? [Source: Stanford Remote Work Study, 2022]",
+    parentId: undefined,
+    linkTo: undefined,
+    isAi: true,
+    createdAt: new Date(Date.now() - 20 * 60 * 1000).toISOString(),
+    reactions: [],
+    upvotes: 0,
+    downvotes: 0,
+    tags: ["Valid Question"],
+    brainAwards: 0
+  }
+];
+
