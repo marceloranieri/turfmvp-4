@@ -12,6 +12,7 @@ const PinnedHighlightBanner: React.FC = () => {
   const [dismissed, setDismissed] = useState(false);
   
   useEffect(() => {
+    // Only show pinned message if it exists and hasn't been dismissed
     if (pinnedMessageId && !dismissed) {
       setVisible(true);
       setTimeLeft(30);
@@ -20,6 +21,9 @@ const PinnedHighlightBanner: React.FC = () => {
         setTimeLeft(prev => {
           if (prev <= 1) {
             clearInterval(timer);
+            // Auto hide after time expires
+            setVisible(false);
+            setDismissed(false);
             return 0;
           }
           return prev - 1;
