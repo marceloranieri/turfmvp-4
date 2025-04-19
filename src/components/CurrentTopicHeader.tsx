@@ -1,11 +1,13 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useTurf } from '@/contexts/TurfContext';
 import { Progress } from '@/components/ui/progress';
-import { Clock, Users } from 'lucide-react';
+import { Clock, Users, Eye, EyeOff } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const CurrentTopicHeader: React.FC = () => {
   const { currentTopic } = useTurf();
+  const [showDescription, setShowDescription] = useState(true);
 
   if (!currentTopic) return null;
 
@@ -31,9 +33,27 @@ const CurrentTopicHeader: React.FC = () => {
   return (
     <div className="border-b border-border px-4 py-3">
       <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-lg font-medium">{currentTopic.title}</h2>
-          <p className="text-sm text-muted-foreground mt-0.5">{currentTopic.description}</p>
+        <div className="flex-grow">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-medium">{currentTopic.title}</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="ml-2 h-8 w-8 p-0"
+              onClick={() => setShowDescription(!showDescription)}
+            >
+              {showDescription ? (
+                <EyeOff className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <Eye className="h-4 w-4 text-muted-foreground" />
+              )}
+            </Button>
+          </div>
+          {showDescription && (
+            <p className="text-sm text-muted-foreground mt-0.5 animate-fade-in">
+              {currentTopic.description}
+            </p>
+          )}
         </div>
       </div>
       
