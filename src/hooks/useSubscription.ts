@@ -3,10 +3,6 @@ import { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { RealtimeChannel } from '@supabase/supabase-js';
 
-/**
- * Custom hook for managing Supabase real-time subscriptions
- * Ensures proper cleanup of subscriptions on component unmount
- */
 export const useSubscription = (
   channelName: string, 
   table: string, 
@@ -17,29 +13,24 @@ export const useSubscription = (
   const channelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
-    // Create a channel with the specific name
     const channel = supabase.channel(channelName);
     
-    // Configure the channel with a postgres_changes event
-    const subscription = channel.on(
-      'postgres_changes', 
-      {
-        event: event,
-        schema: 'public',
-        table: table,
-        ...(filter || {})
-      },
-      (payload) => {
-        handler(payload);
-      }
-    ).subscribe();
+    channel
+      .on(
+        'postgres_changes' as any,  // Type assertion to fix TS error
+        {
+          event: event,
+          schema: 'public',
+          table: table,
+          ...(filter || {})
+        },
+        handler
+      )
+      .subscribe();
     
-    // Store the channel reference for cleanup
     channelRef.current = channel;
 
-    // Cleanup function to remove the channel on unmount
     return () => {
-      console.log(`Cleaning up subscription to ${channelName}`);
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);
       }
@@ -48,3 +39,4 @@ export const useSubscription = (
 };
 
 export default useSubscription;
+
