@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTurf } from '@/contexts/TurfContext';
 import { Trophy, Activity } from 'lucide-react';
@@ -32,7 +31,7 @@ const LiveUpdatesPanel: React.FC = () => {
         <div>
           <div className="text-xs uppercase text-muted-foreground font-medium tracking-wider mb-3 flex items-center gap-1">
             <Trophy className="h-3 w-3" /> 
-            <span>DEBATE MAESTROS</span>
+            <span>DEBATE LEADERS</span>
           </div>
           
           <div className="space-y-3">
@@ -47,7 +46,7 @@ const LiveUpdatesPanel: React.FC = () => {
                     {user.username}
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    {user.count} Brain Award{user.count !== 1 ? 's' : ''}
+                    {user.count} Genius Award{user.count !== 1 ? 's' : ''}
                   </div>
                 </div>
               </div>

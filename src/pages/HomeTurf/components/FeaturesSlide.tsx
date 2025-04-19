@@ -20,10 +20,10 @@ const FeaturesSlide: React.FC = () => {
       </div>
       
       <div className="bg-secondary/30 p-6 rounded-lg max-w-md">
-        <h2 className="text-2xl font-bold mb-3">🧠 Brain Awards</h2>
-        <p className="mb-4">Award up to 3 Brains daily to recognize insightful contributions!</p>
+        <h2 className="text-2xl font-bold mb-3">🧠 Genius Award</h2>
+        <p className="mb-4">Award up to 3 points daily to recognize insightful contributions!</p>
         <div className="text-gold font-bold">
-          Most Brains = Debate Maestro ⭐
+          Most Genius Awards = Debate Leaders ⭐
         </div>
       </div>
     </div>

@@ -59,7 +59,7 @@ const MessageStats: React.FC<MessageStatsProps> = ({
         <div className="flex items-center gap-1 mt-1.5 text-gold">
           <BrainCircuit className="h-4 w-4" />
           <span className="text-xs font-medium">
-            {brainAwards} Brain Award{brainAwards > 1 ? 's' : ''}
+            {brainAwards} Genius Award{brainAwards > 1 ? 's' : ''}
           </span>
         </div>
       )}
