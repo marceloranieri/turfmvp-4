@@ -11,6 +11,28 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
+// Design tokens following Discord-inspired system
+const tokens = {
+  colors: {
+    primary: 'var(--primary)',
+    background: 'var(--background)',
+    backgroundHover: 'var(--accent)',
+    text: 'var(--foreground)',
+    textMuted: 'var(--muted-foreground)',
+  },
+  spacing: {
+    xs: '4px',
+    sm: '8px',
+    md: '16px',
+    lg: '24px',
+  },
+  radius: {
+    sm: '4px',
+    md: '8px',
+    lg: '12px',
+  }
+};
+
 // Common emoji options for the emoji picker
 const EMOJI_OPTIONS = ['👍', '❤️', '😂', '🔥', '🎉', '👏', '🙌', '🤔', '😮', '😢'];
 
@@ -31,7 +53,7 @@ const MessageComposer: React.FC = () => {
   };
   
   return (
-    <div className="border-t border-border p-4 bg-card dark:bg-[#2B2D31]">
+    <div className="border-t border-border p-4 bg-background backdrop-blur-sm">
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <div className="flex items-center gap-2">
           <TooltipProvider>
@@ -41,7 +63,7 @@ const MessageComposer: React.FC = () => {
                   type="button" 
                   variant="ghost" 
                   size="icon"
-                  className="rounded-full hover:bg-secondary dark:hover:bg-muted text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors"
+                  className="rounded-full hover:bg-backgroundHover text-textMuted hover:text-text transition-colors"
                   onClick={() => console.log('Attach file clicked')}
                   aria-label="Attach file"
                 >
@@ -61,7 +83,7 @@ const MessageComposer: React.FC = () => {
                   type="button" 
                   variant="ghost" 
                   size="icon"
-                  className="rounded-full hover:bg-secondary dark:hover:bg-muted text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors"
+                  className="rounded-full hover:bg-backgroundHover text-textMuted hover:text-text transition-colors"
                   onClick={() => console.log('Link to message clicked')}
                   aria-label="Link to message"
                 >
@@ -80,7 +102,7 @@ const MessageComposer: React.FC = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder={`Message ${currentTopic ? currentTopic.title : 'the chat'}...`}
-          className="flex-1 bg-[#F6F6F6] dark:bg-[#383A40] border border-[#DCDDDF] dark:border-[#2D2F33] focus:border-[#00A8FC] dark:focus:border-[#5865F2] text-[#2C2F33] dark:text-white text-sm rounded-md px-4 py-2.5 placeholder:text-[#72767D] dark:placeholder:text-[#989AA2] focus:outline-none"
+          className="flex-1 bg-black/20 backdrop-blur-sm border border-white/10 focus:ring-1 focus:ring-white/20 text-sm rounded-md px-4 py-2.5 placeholder:text-muted-foreground"
         />
         
         <div className="flex items-center gap-2">
@@ -90,19 +112,19 @@ const MessageComposer: React.FC = () => {
                 type="button" 
                 variant="ghost" 
                 size="icon"
-                className="rounded-full hover:bg-secondary dark:hover:bg-muted text-muted-foreground dark:text-muted-foreground hover:text-foreground dark:hover:text-white transition-colors"
+                className="rounded-full hover:bg-backgroundHover text-textMuted hover:text-text transition-colors"
                 aria-label="Add emoji"
               >
                 <Smile className="h-5 w-5" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="p-2 w-auto dark:bg-[#2B2D31] border dark:border-[#2D2F33]">
+            <PopoverContent className="p-2 w-auto bg-black/80 backdrop-blur-sm border border-white/10">
               <div className="flex flex-wrap gap-2 max-w-[200px]">
                 {EMOJI_OPTIONS.map((emoji, index) => (
                   <button
                     key={index}
                     type="button"
-                    className="text-lg hover:bg-secondary dark:hover:bg-muted p-1 rounded cursor-pointer transition-colors"
+                    className="text-lg hover:bg-white/10 p-1 rounded cursor-pointer transition-colors"
                     onClick={() => handleEmojiSelect(emoji)}
                     aria-label={`Emoji ${emoji}`}
                   >
@@ -122,9 +144,7 @@ const MessageComposer: React.FC = () => {
                   size="icon"
                   className={cn(
                     "rounded-full transition-colors",
-                    message.trim() 
-                      ? "text-primary dark:text-[#5865F2] hover:text-primary/90 dark:hover:text-[#4752C4]" 
-                      : "text-muted-foreground dark:text-muted-foreground"
+                    message.trim() ? "text-primary hover:text-primary/90" : "text-muted-foreground"
                   )}
                   disabled={!message.trim()}
                   aria-label="Send message"

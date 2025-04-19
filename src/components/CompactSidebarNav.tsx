@@ -15,7 +15,7 @@ const CompactSidebarNav: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
   
   return (
-    <div className="h-full w-[72px] flex flex-col items-center py-4 bg-[#EDEDEE] border-r border-[#E3E5E8]">
+    <div className="h-full w-[72px] flex flex-col items-center py-4 bg-sidebar border-r border-border">
       <div className="flex flex-col items-center gap-2 w-full">
         <TooltipProvider>
           <Tooltip>
@@ -23,11 +23,7 @@ const CompactSidebarNav: React.FC = () => {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className={`w-12 h-12 rounded-full ${
-                  isActive('/') 
-                    ? 'bg-[#00A8FC] text-white' 
-                    : 'text-[#2C2F33] hover:bg-[#E3E5E8]'
-                }`}
+                className={`w-12 h-12 rounded-full ${isActive('/') ? 'bg-primary/10' : 'hover:bg-muted/30'}`}
                 onClick={() => navigate('/')}
                 aria-label="Home"
               >

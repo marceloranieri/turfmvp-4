@@ -1,4 +1,3 @@
-
 module.exports = {
   darkMode: ["class"],
   content: [
@@ -51,14 +50,11 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        gold: {
-          DEFAULT: 'hsl(var(--gold))',
-          light: 'hsl(var(--gold-light))',
-        },
+        gold: '#FFD700',
+        'gold-light': '#FFDE33',
         ai: {
-          DEFAULT: 'hsl(var(--ai))',
-          foreground: 'hsl(var(--ai-foreground))',
-          light: 'hsl(var(--ai) / 0.7)',
+          DEFAULT: '#5865F2', // Discord blurple color
+          'light': '#7983F5',
         },
       },
       borderRadius: {
