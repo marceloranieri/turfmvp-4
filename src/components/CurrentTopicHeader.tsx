@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { useTurf } from '@/contexts/TurfContext';
 import { Progress } from '@/components/ui/progress';
-import { Clock, Users, Eye, EyeOff } from 'lucide-react';
+import { Clock, Users, CircleEllipsis } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const CurrentTopicHeader: React.FC = () => {
@@ -34,19 +33,15 @@ const CurrentTopicHeader: React.FC = () => {
     <div className="border-b border-border px-4 py-3">
       <div className="flex justify-between items-center">
         <div className="flex-grow">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <h2 className="text-lg font-medium">{currentTopic.title}</h2>
             <Button
               variant="ghost"
               size="sm"
-              className="ml-2 h-8 w-8 p-0"
+              className="h-8 w-8 p-0"
               onClick={() => setShowDescription(!showDescription)}
             >
-              {showDescription ? (
-                <EyeOff className="h-4 w-4 text-muted-foreground" />
-              ) : (
-                <Eye className="h-4 w-4 text-muted-foreground" />
-              )}
+              <CircleEllipsis className="h-4 w-4 text-muted-foreground" />
             </Button>
           </div>
           {showDescription && (
