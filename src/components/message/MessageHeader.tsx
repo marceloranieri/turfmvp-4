@@ -17,7 +17,6 @@ const getTagColor = (tag: MessageTag): string => {
     case 'Deep Insight': return 'bg-blue-400 text-white';
     case 'Valid Question': return 'bg-purple-400 text-white';
     case 'Strong Evidence': return 'bg-green-400 text-white';
-    case 'Opening Argument': return 'bg-green-400 text-white';
     default: return 'bg-gray-400 text-white';
   }
 };

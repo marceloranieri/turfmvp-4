@@ -58,7 +58,7 @@ const LiveUpdatesPanel: React.FC = () => {
             <h3 className="font-medium">Topic Stats</h3>
           </div>
           <Badge variant="outline" className="bg-primary/10 text-xs">
-            {currentTopic?.currentPhase || "Opening Arguments"}
+            Discussion
           </Badge>
         </div>
 
