@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useTurf } from '@/contexts/TurfContext';
-import type { Message, MessageTag } from '@/types/turf';
+import { Message, MessageTag, ReactionType } from '@/types/turf';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BrainCircuit, LinkIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';

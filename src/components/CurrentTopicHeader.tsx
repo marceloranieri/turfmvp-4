@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useTurf } from '@/contexts/TurfContext';
-import type { DebatePhase } from '@/types/turf';
+import { DebatePhase } from '@/types/turf';
 import { formatDistanceToNow } from 'date-fns';
 import { HashIcon, Clock } from 'lucide-react';
 

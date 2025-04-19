@@ -1,3 +1,4 @@
+
 export enum DebatePhase {
   OPENING_ARGUMENTS = "Opening Arguments",
   REBUTTALS = "Rebuttals",
@@ -79,15 +80,3 @@ export interface TurfContextType {
   markNotificationsAsRead: () => void;
   toggleDarkMode: () => void;
 }
-
-// Make sure to export these types that are used across components
-export type {
-  User,
-  Message,
-  Reaction,
-  ReactionType,
-  MessageTag,
-  Notification,
-  DebateTopic,
-  TurfContextType
-};

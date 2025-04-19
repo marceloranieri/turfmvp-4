@@ -1,12 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useWizardAI } from '../hooks/useWizardAI';
 import { MOCK_CURRENT_USER, INITIAL_TOPIC } from '../constants/turf';
-import type { 
+import { 
   TurfContextType, 
   Message, 
   User, 
-  Notification, 
-  ReactionType 
+  Notification,
+  ReactionType,
+  DebatePhase,
+  DebateTopic
 } from '../types/turf';
 
 const TurfContext = createContext<TurfContextType>({
@@ -104,11 +106,21 @@ const INITIAL_NOTIFICATIONS: Notification[] = [
   }
 ];
 
+// Update INITIAL_TOPIC to use the DebatePhase enum
+const INITIAL_TOPIC_FIXED: DebateTopic = {
+  id: "topic-1",
+  title: "Is remote work here to stay post-pandemic?",
+  description: "Discuss the long-term viability of remote work arrangements and their impact on productivity, well-being, and organizational culture.",
+  currentPhase: DebatePhase.OPENING_ARGUMENTS,
+  startTime: new Date().toISOString(),
+  endTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+};
+
 export const TurfProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User>(MOCK_CURRENT_USER);
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
   const [notifications, setNotifications] = useState<Notification[]>(INITIAL_NOTIFICATIONS);
-  const [currentTopic, setCurrentTopic] = useState(INITIAL_TOPIC);
+  const [currentTopic, setCurrentTopic] = useState<DebateTopic>(INITIAL_TOPIC_FIXED);
   const [pinnedMessageId, setPinnedMessageId] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>(true);
 

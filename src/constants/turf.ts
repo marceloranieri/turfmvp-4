@@ -1,4 +1,6 @@
 
+import { DebatePhase } from '../types/turf';
+
 export const AI_NOTIFICATION_LINES = [
   "Wiz just tossed a thought grenade.",
   "The Wizard has entered the chat.",
@@ -25,7 +27,7 @@ export const INITIAL_TOPIC = {
   id: "topic-1",
   title: "Is remote work here to stay post-pandemic?",
   description: "Discuss the long-term viability of remote work arrangements and their impact on productivity, well-being, and organizational culture.",
-  currentPhase: "Opening Arguments" as const,
+  currentPhase: DebatePhase.OPENING_ARGUMENTS,
   startTime: new Date().toISOString(),
   endTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
 };
