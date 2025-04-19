@@ -17,7 +17,7 @@ export const useSubscription = (
   const channelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
-    // Using the correct API for Supabase channel subscriptions
+    // Create a channel with the specific name
     const channel = supabase
       .channel(channelName)
       .on(
@@ -42,3 +42,5 @@ export const useSubscription = (
     };
   }, [channelName, table, event, handler, filter]);
 };
+
+export default useSubscription;
