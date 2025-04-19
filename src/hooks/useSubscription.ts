@@ -20,20 +20,19 @@ export const useSubscription = (
     // Create a channel with the specific name
     const channel = supabase.channel(channelName);
     
-    // Add the postgres_changes listener with proper configuration
-    const subscription = channel
-      .on('postgres_changes', 
-        {
-          event: `${event}:*`, // Append wildcard to match Supabase's event syntax
-          schema: 'public',
-          table: table,
-          ...(filter || {})
-        }, 
-        (payload) => {
-          handler(payload);
-        }
-      )
-      .subscribe();
+    // Configure the channel with a postgres_changes event
+    const subscription = channel.on(
+      'postgres_changes', 
+      {
+        event: event,
+        schema: 'public',
+        table: table,
+        ...(filter || {})
+      },
+      (payload) => {
+        handler(payload);
+      }
+    ).subscribe();
     
     // Store the channel reference for cleanup
     channelRef.current = channel;
