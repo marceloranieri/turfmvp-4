@@ -1,21 +1,22 @@
-
 import React from 'react';
 import { useTurf } from '@/contexts/TurfContext';
 import { Message, MessageTag } from '@/types/turf';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { BrainCircuit, LinkIcon } from 'lucide-react';
+import { BrainCircuit, LinkIcon, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import MessageReactions from './MessageReactions';
 import MessageActions from './MessageActions';
 import MessageReplyForm from './MessageReplyForm';
 import { useMessageActions } from '@/hooks/useMessageActions';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface MessageCardProps {
   message: Message;
   isPinned?: boolean;
+  isSequence?: boolean;
 }
 
-const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) => {
+const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false, isSequence = false }) => {
   const { messages } = useTurf();
   const {
     showActions,
@@ -45,7 +46,6 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) 
     minute: '2-digit'
   });
   
-  // Function to get tag color
   const getTagColor = (tag: MessageTag): string => {
     switch (tag) {
       case 'Sharp Wit': return 'bg-orange-400 text-black';
@@ -59,9 +59,10 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) 
   return (
     <div 
       className={cn(
-        "px-4 py-3 hover:bg-muted/30 transition-colors group relative",
+        "px-4 py-2 hover:bg-muted/30 transition-colors group relative rounded-sm",
         message.isAi && "bg-ai/20",
-        isPinned && "bg-gold/10 border-l-4 border-gold"
+        isPinned && "bg-gold-light/10 border-l-4 border-gold animate-pulse",
+        isSequence && "pt-0.5 mt-0"
       )}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
@@ -74,44 +75,50 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) 
       )}
       
       <div className="flex gap-3">
-        <Avatar className="h-10 w-10 shrink-0 mt-0.5">
-          <AvatarImage src={message.avatarUrl} alt={message.username} />
-          <AvatarFallback>{message.username.charAt(0)}</AvatarFallback>
-        </Avatar>
+        {!isSequence ? (
+          <Avatar className="h-10 w-10 shrink-0 mt-0.5">
+            <AvatarImage src={message.avatarUrl} alt={message.username} />
+            <AvatarFallback>{message.username.charAt(0).toUpperCase()}</AvatarFallback>
+          </Avatar>
+        ) : (
+          <div className="w-10 shrink-0"></div>
+        )}
         
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <span className={cn(
-              "font-medium",
-              message.isAi && "text-primary flex items-center gap-1"
-            )}>
-              {message.username}
-              {message.isAi && (
-                <span className="text-xs bg-primary text-primary-foreground rounded px-1 py-0.5">
-                  BOT
-                </span>
-              )}
-            </span>
-            <span className="text-xs text-muted-foreground">{formattedTime}</span>
-            
-            {message.tags.length > 0 && (
-              <div className="flex gap-1">
-                {message.tags.map((tag, index) => (
-                  <span 
-                    key={index} 
-                    className={cn(
-                      "text-xs px-1.5 py-0.5 rounded",
-                      getTagColor(tag)
-                    )}
-                  >
-                    {tag}
+          {!isSequence && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className={cn(
+                "font-medium",
+                message.isAi && "text-primary flex items-center gap-1"
+              )}>
+                {message.username}
+                {message.isAi && (
+                  <span className="text-xs bg-primary text-primary-foreground rounded px-1 py-0.5 ml-1">
+                    🧙 BOT
                   </span>
-                ))}
-              </div>
-            )}
-          </div>
+                )}
+              </span>
+              <span className="text-xs text-muted-foreground">{formattedTime}</span>
+              
+              {message.tags.length > 0 && (
+                <div className="flex gap-1">
+                  {message.tags.map((tag, index) => (
+                    <span 
+                      key={index} 
+                      className={cn(
+                        "text-xs px-1.5 py-0.5 rounded",
+                        getTagColor(tag)
+                      )}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
           
-          <div className="mt-1 break-words">
+          <div className={cn("break-words", isSequence && "mt-0")}>
             {message.content}
           </div>
           
@@ -126,6 +133,40 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) 
               </div>
             </div>
           )}
+          
+          <div className="flex items-center mt-1 gap-2">
+            {message.upvotes > 0 && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-1 text-xs">
+                      <ThumbsUp className="h-3 w-3 text-primary" />
+                      <span>{message.upvotes}</span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{message.upvotes} {message.upvotes === 1 ? 'upvote' : 'upvotes'}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+            
+            {message.downvotes > 0 && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-1 text-xs">
+                      <ThumbsDown className="h-3 w-3 text-destructive" />
+                      <span>{message.downvotes}</span>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{message.downvotes} {message.downvotes === 1 ? 'downvote' : 'downvotes'}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
           
           <MessageReactions reactions={message.reactions} />
           

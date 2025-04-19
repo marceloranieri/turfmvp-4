@@ -6,7 +6,7 @@ import { MessagesProvider } from './MessagesContext';
 import { NotificationsProvider } from './NotificationsContext';
 import { TopicsProvider } from './TopicsContext';
 
-const TurfContext = createContext<Partial<TurfContextType> | null>(null);
+const TurfContext = createContext<Partial<TurfContextType>>({});
 
 export const TurfProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User>(MOCK_CURRENT_USER);
@@ -17,7 +17,7 @@ export const TurfProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Store base context values here
-  const baseContextValue = {
+  const baseContextValue: Partial<TurfContextType> = {
     currentUser,
     darkMode,
     toggleDarkMode,
@@ -72,7 +72,7 @@ export const useTurf = () => {
   const topicsContext = useContext(TopicsProvider.context);
   const messagesContext = useContext(MessagesProvider.context);
 
-  if (!turfContext || !notificationsContext || !topicsContext || !messagesContext) {
+  if (!notificationsContext || !topicsContext || !messagesContext) {
     throw new Error("useTurf must be used within TurfProvider");
   }
 
@@ -81,5 +81,5 @@ export const useTurf = () => {
     ...notificationsContext,
     ...topicsContext,
     ...messagesContext
-  };
+  } as TurfContextType;
 };

@@ -35,6 +35,55 @@ const INITIAL_MESSAGES: Message[] = [
     downvotes: 0,
     tags: [],
     brainAwards: 0
+  },
+  {
+    id: 'msg-2',
+    userId: 'wizard',
+    username: 'Wizard of Mods',
+    avatarUrl: '/wizard.png',
+    content: 'Today\'s topic explores the future of remote work post-pandemic. Research suggests mixed impacts on productivity depending on job type and personality. What\'s your experience?',
+    isAi: true,
+    createdAt: new Date(Date.now() - 60000).toISOString(),
+    reactions: [],
+    upvotes: 3,
+    downvotes: 0,
+    tags: [],
+    brainAwards: 1
+  },
+  {
+    id: 'msg-3',
+    userId: 'user-2',
+    username: 'DebateMaster',
+    avatarUrl: 'https://i.pravatar.cc/150?u=user-2',
+    content: 'Remote work has definitely boosted my productivity. No commute means more time for deep work and fewer distractions.',
+    isAi: false,
+    createdAt: new Date(Date.now() - 45000).toISOString(),
+    reactions: [{
+      id: 'reaction-1',
+      userId: 'user-3',
+      username: 'ThoughtLeader',
+      type: 'emoji',
+      value: '👍'
+    }],
+    upvotes: 5,
+    downvotes: 1,
+    tags: ['Deep Insight'],
+    brainAwards: 2
+  },
+  {
+    id: 'msg-4',
+    userId: 'user-3',
+    username: 'ThoughtLeader',
+    avatarUrl: 'https://i.pravatar.cc/150?u=user-3',
+    content: 'I disagree. Team cohesion suffers significantly without in-person interaction. Productivity might look good on paper, but innovation and collaboration take a hit.',
+    isAi: false,
+    createdAt: new Date(Date.now() - 30000).toISOString(),
+    reactions: [],
+    upvotes: 3,
+    downvotes: 2,
+    tags: ['Valid Question'],
+    brainAwards: 0,
+    parentId: 'msg-3'
   }
 ];
 
@@ -76,6 +125,20 @@ export function MessagesProvider({
       
       if (lastMessages.length > 0) {
         setPinnedMessageId(lastMessages[0].id);
+        
+        // Create a notification for the pin
+        const notification: Notification = {
+          id: `notif-pin-${Date.now()}`,
+          userId: lastMessages[0].userId,
+          messageId: lastMessages[0].id,
+          type: "pin",
+          content: `Your message was pinned for high engagement!`,
+          isRead: false,
+          createdAt: new Date().toISOString()
+        };
+        
+        notificationsContext.addNotification(notification);
+        
         setTimeout(() => setPinnedMessageId(null), 30000);
       }
     };
@@ -87,7 +150,7 @@ export function MessagesProvider({
       clearTimeout(initialPin);
       clearInterval(interval);
     };
-  }, [messages]);
+  }, [messages, notificationsContext]);
 
   // Effect for AI responses
   React.useEffect(() => {
@@ -122,7 +185,7 @@ export function MessagesProvider({
           id: `notif-${Date.now()}`,
           userId: linkedMessage.userId,
           messageId: newMessage.id,
-          type: "mention", // Now using the literal string from the union type
+          type: "mention",
           content: `${currentUser.username} linked to your message, earning you harmony points!`,
           isRead: false,
           createdAt: new Date().toISOString()
@@ -158,7 +221,7 @@ export function MessagesProvider({
           id: `notif-${Date.now()}`,
           userId: targetMessage.userId,
           messageId,
-          type: "reaction", // Now using the literal string from the union type
+          type: "reaction",
           content: `${currentUser.username} reacted to your message with ${value}`,
           isRead: false,
           createdAt: new Date().toISOString()
@@ -194,7 +257,7 @@ export function MessagesProvider({
           id: `notif-${Date.now()}`,
           userId: targetMessage.userId,
           messageId,
-          type: "reaction", // Now using the literal string from the union type
+          type: "reaction",
           content: `${currentUser.username} upvoted your message (+1 harmony point)`,
           isRead: false,
           createdAt: new Date().toISOString()
@@ -232,7 +295,7 @@ export function MessagesProvider({
           id: `notif-${Date.now()}`,
           userId: targetMessage.userId,
           messageId,
-          type: "award", // Now using the literal string from the union type
+          type: "award",
           content: `${currentUser.username} awarded your message a Brain! 🧠`,
           isRead: false,
           createdAt: new Date().toISOString()
