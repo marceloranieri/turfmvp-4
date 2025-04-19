@@ -88,23 +88,6 @@ const CompactSidebarNav: React.FC = () => {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="w-12 h-12 rounded-full hover:bg-muted/30 flex justify-center"
-              >
-                <Search className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right">
-              <p>Search</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
                 className="w-12 h-12 rounded-full hover:bg-muted/30 flex justify-center relative"
                 asChild
               >
@@ -120,6 +103,23 @@ const CompactSidebarNav: React.FC = () => {
             </TooltipTrigger>
             <TooltipContent side="right">
               <p>Notifications</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="w-12 h-12 rounded-full hover:bg-muted/30 flex justify-center"
+              >
+                <Search className="h-5 w-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>Search</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
