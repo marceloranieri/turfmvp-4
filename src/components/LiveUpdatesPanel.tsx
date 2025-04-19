@@ -8,7 +8,7 @@ const LiveUpdatesPanel: React.FC = () => {
   const { messages } = useTurf();
   
   // Get users with the most brain awards
-  const userAwards = messages.reduce((acc: Record<string, {username: string, avatarUrl: string, count: number}>, message) => {
+  const userAwards = messages ? messages.reduce((acc: Record<string, {username: string, avatarUrl: string, count: number}>, message) => {
     if (message.brainAwards > 0) {
       if (!acc[message.userId]) {
         acc[message.userId] = {
@@ -22,7 +22,7 @@ const LiveUpdatesPanel: React.FC = () => {
     }
     
     return acc;
-  }, {});
+  }, {}) : {};
   
   const topUsers = Object.values(userAwards)
     .sort((a, b) => b.count - a.count)
@@ -31,15 +31,15 @@ const LiveUpdatesPanel: React.FC = () => {
   return (
     <div className="w-60 hidden lg:block border-l border-border h-full bg-card overflow-y-auto">
       <div className="p-4">
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2 mb-4">
           <Users className="h-5 w-5 text-muted-foreground" />
           <h3 className="font-medium">Debate Stats</h3>
         </div>
         
         {/* Top contributors by brain awards */}
         <div className="mb-6">
-          <div className="text-xs uppercase text-muted-foreground font-medium tracking-wider mb-2">
-            Top Contributors
+          <div className="text-xs uppercase text-muted-foreground font-medium tracking-wider mb-3">
+            TOP CONTRIBUTORS
           </div>
           
           <div className="space-y-3">
@@ -66,12 +66,12 @@ const LiveUpdatesPanel: React.FC = () => {
         
         {/* Current activity */}
         <div>
-          <div className="text-xs uppercase text-muted-foreground font-medium tracking-wider mb-2">
-            Active Now
+          <div className="text-xs uppercase text-muted-foreground font-medium tracking-wider mb-3">
+            ACTIVE NOW
           </div>
           
           <div className="text-xs text-muted-foreground">
-            {messages.length} messages in debate
+            {messages ? messages.length : 0} messages in debate
           </div>
         </div>
       </div>

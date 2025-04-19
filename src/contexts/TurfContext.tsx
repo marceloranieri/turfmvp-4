@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { TurfContextType, User } from '@/types/turf';
 import { MOCK_CURRENT_USER } from '../constants/turf';
 import { MessagesProvider } from './MessagesContext';

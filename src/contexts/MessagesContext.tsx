@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Message, ReactionType, User, Notification } from '@/types/turf';
 import { useWizardAI } from '../hooks/useWizardAI';
 import { useNotifications } from './NotificationsContext';
@@ -20,6 +20,24 @@ const MessagesContext = createContext<MessagesContextType | null>(null);
 // Expose the context for direct access
 MessagesProvider.context = MessagesContext;
 
+// Sample initial message
+const INITIAL_MESSAGES: Message[] = [
+  {
+    id: 'msg-1',
+    userId: 'system',
+    username: 'Turf System',
+    avatarUrl: '/wizard.png',
+    content: 'Welcome to the debate! Share your thoughts on the topic.',
+    isAi: false,
+    createdAt: new Date().toISOString(),
+    reactions: [],
+    upvotes: 2,
+    downvotes: 0,
+    tags: [],
+    brainAwards: 0
+  }
+];
+
 export function MessagesProvider({ 
   children,
   currentUser,
@@ -29,9 +47,14 @@ export function MessagesProvider({
   currentUser: User;
   onNotification: (notification: any) => void;
 }) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
   const [pinnedMessageId, setPinnedMessageId] = useState<string | null>(null);
   const notificationsContext = useNotifications();
+
+  // Log messages every time they change
+  useEffect(() => {
+    console.log("Current messages:", messages);
+  }, [messages]);
 
   const { checkForLull } = useWizardAI(
     messages,

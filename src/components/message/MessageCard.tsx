@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useTurf } from '@/contexts/TurfContext';
 import { Message, MessageTag } from '@/types/turf';
@@ -31,11 +32,11 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) 
     toggleReply
   } = useMessageActions(message);
   
-  const parentMessage = message.parentId 
+  const parentMessage = message.parentId && messages 
     ? messages.find(m => m.id === message.parentId) 
     : null;
   
-  const linkedMessage = message.linkTo 
+  const linkedMessage = message.linkTo && messages
     ? messages.find(m => m.id === message.linkTo) 
     : null;
   
@@ -58,7 +59,7 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, isPinned = false }) 
   return (
     <div 
       className={cn(
-        "px-4 py-2 hover:bg-muted/30 transition-colors group relative",
+        "px-4 py-3 hover:bg-muted/30 transition-colors group relative",
         message.isAi && "bg-ai/20",
         isPinned && "bg-gold/10 border-l-4 border-gold"
       )}

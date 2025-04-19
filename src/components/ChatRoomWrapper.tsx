@@ -13,9 +13,11 @@ import ThemeToggle from './ThemeToggle';
 const ChatRoomWrapper: React.FC = () => {
   return (
     <TurfProvider>
-      <div className="flex w-full min-h-screen bg-background dark:bg-background">
+      <div className="flex w-full h-screen bg-background dark:bg-background">
         {/* Left sidebar - Discord-like compact navigation */}
-        <CompactSidebarNav />
+        <div className="w-[72px] h-full bg-sidebar border-r border-border flex flex-col">
+          <CompactSidebarNav />
+        </div>
         
         {/* Main chat column */}
         <div className="flex flex-col flex-grow overflow-hidden">
